@@ -1,18 +1,21 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import { ClientEntity } from './client.entity';
+import { UserEntity } from './User.entity';
+import { PaymentEntity } from './Payment.entity';
 
 @Entity("Membreship")
 export class MembershipEntity {
     @PrimaryGeneratedColumn()
     idMembership: number;
 
-    @Column()
-    idUser: number;
+    @ManyToOne(() => UserEntity, user => user.Membreship)
+    User: UserEntity;
 
-    @Column()
-    idClient: number;
+    @ManyToOne(() => ClientEntity, client => client.Membreship)
+    Client: ClientEntity;
 
-    @Column()
-    idPayment: number;
+    @OneToMany(() => PaymentEntity, payment => payment.Membership)
+    Payment: PaymentEntity[];
     
     @Column()
     startDate: string;
@@ -28,9 +31,6 @@ export class MembershipEntity {
 
     @Column()
     type: number;
-
-    @Column()
-    contract: boolean;
 
     @Column()
     observation: string;

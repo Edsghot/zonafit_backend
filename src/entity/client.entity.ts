@@ -1,10 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { MembershipEntity } from './membership.entity';
 
 @Entity("Client")
 export class ClientEntity {
     @PrimaryGeneratedColumn()
-    IdUser: number;
+    IdClient: number;
 
+    @OneToMany(() => MembershipEntity, membreship => membreship.Client)
+    Membreship: MembershipEntity[];
+    
     @Column()
     Code: string;
 
@@ -34,15 +38,6 @@ export class ClientEntity {
 
     @Column()
     Address: string;
-
-    @Column()
-    Department: string;
-
-    @Column()
-    Province: string;
-
-    @Column()
-    District: string;
 
     @Column()
     Whatsapp: string;
