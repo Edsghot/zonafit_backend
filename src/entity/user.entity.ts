@@ -34,4 +34,13 @@ export class UserEntity {
 
     @Column()
     Email: string;
+
+    @Column()
+    BirthDate: string;
+
+    @Column()
+    Note: string;
+
+    @Column()
+    Image: string;
 }

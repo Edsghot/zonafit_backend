@@ -63,7 +63,7 @@ export class UserService {
       async login(username: string, password: string): Promise<{ data: UserEntity | null, msg: string, success: boolean }> {
         try {
           const user = await this.userRepository.findOne({ where: { Username: username } });
-          if (!user || user.Password !== password) {
+          if (!user || user.Password !== password || !user.Access) {
             return { data: null, msg: 'Invalid username or password', success: false };
           }
     
