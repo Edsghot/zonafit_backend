@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
-import { UserEntity } from './User.entity';
+import { UserEntity } from './user.entity';
 import { ClientEntity } from './client.entity';
 import { PaymentEntity } from './Payment.entity';
 @Entity("Membreship")
