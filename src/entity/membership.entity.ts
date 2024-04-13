@@ -1,8 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
-import { ClientEntity } from './client.entity';
 import { UserEntity } from './User.entity';
+import { ClientEntity } from './client.entity';
 import { PaymentEntity } from './Payment.entity';
-
 @Entity("Membreship")
 export class MembershipEntity {
     @PrimaryGeneratedColumn()
