@@ -10,4 +10,5 @@ export class CreateClientDto {
     address: string;
     whatsapp: string;
     email: string;
+    BirthDate:Date;
 }

@@ -6,69 +6,119 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class ClientService {
-    constructor( @InjectRepository(ClientEntity)
-    private readonly clientRepository: Repository<ClientEntity>){}
+  constructor(
+    @InjectRepository(ClientEntity)
+    private readonly clientRepository: Repository<ClientEntity>,
+  ) {}
 
-    async insertClient(request: CreateClientDto) {
-        try {
-            // Create a new client entity using data from the DTO
-            const newClient = new ClientEntity();
-            newClient.Code = '121as';
-            newClient.Username = request.username;
-            newClient.FirstName = request.firstName;
-            newClient.LastName = request.lastName;
-            newClient.PhoneNumber = request.phoneNumber;
-            newClient.Document = request.document;
-            newClient.DocumentType = request.documentType;
-            newClient.MaritalStatus = request.maritalStatus;
-            newClient.Gender = request.gender;
-            newClient.Address = request.address;
-            newClient.Whatsapp = request.whatsapp;
-            newClient.Email = request.email;
-    
-            // Save the new client entity to the database
-            await this.clientRepository.save(newClient);
-    
-            return { msg: 'Client inserted successfully', success: true };
-        } catch (error) {
-            return { msg: 'Error: ', detailMsg: error, success: false };
-        }
+  async insertClient(request: CreateClientDto) {
+    try {
+        // Crear una nueva entidad de cliente utilizando los datos del DTO
+        const newClient = new ClientEntity();
+        newClient.Code = '121as';
+        newClient.Username = request.username;
+        newClient.FirstName = request.firstName;
+        newClient.LastName = request.lastName;
+        newClient.PhoneNumber = request.phoneNumber;
+        newClient.Document = request.document;
+        newClient.DocumentType = request.documentType;
+        newClient.MaritalStatus = request.maritalStatus;
+        newClient.Gender = request.gender;
+        newClient.Address = request.address;
+        newClient.Whatsapp = request.whatsapp;
+        newClient.Email = request.email;
+        newClient.BirthDate = request.BirthDate;
+
+        // Guardar la nueva entidad de cliente en la base de datos
+        await this.clientRepository.save(newClient);
+
+        return { msg: 'Client inserted successfully', success: true };
+    } catch (error) {
+        console.error('Failed to insert client:', error);
+        return { msg: 'Failed to insert client', detailMsg: error, success: false };
     }
+}
 
-    async getAllClients() {
+async getAllClients() {
+    try {
         const clients = await this.clientRepository.find();
         return { msg: 'Clients found', success: true, data: clients };
+    } catch (error) {
+        console.error('Failed to get clients:', error);
+        return { msg: 'Failed to get clients', detailMsg: error, success: false };
     }
+}
 
-    async getClientById(id: number) {
-        const client = await this.clientRepository.findOne({where: {IdClient:id}});
+async getClientById(id: number) {
+    try {
+        const client = await this.clientRepository.findOne({ where: { IdClient: id } });
         if (!client) {
             throw new NotFoundException(`Client with ID ${id} not found`);
         }
         return { msg: 'Client found', success: true, data: client };
+    } catch (error) {
+        console.error('Failed to get client by ID:', error);
+        return { msg: 'Failed to get client by ID', detailMsg: error, success: false };
     }
+}
 
-    async getClientByDni(dni: string) {
+async getClientByDni(dni: string) {
+    try {
         const client = await this.clientRepository.findOne({ where: { Document: dni } });
         if (!client) {
             throw new NotFoundException(`Client with DNI ${dni} not found`);
         }
         return { msg: 'Client found', success: true, data: client };
+    } catch (error) {
+        console.error('Failed to get client by DNI:', error);
+        return { msg: 'Failed to get client by DNI', detailMsg: error, success: false };
     }
+}
 
-    async deleteClient(id: number) {
+async deleteClient(id: number) {
+    try {
         const result = await this.clientRepository.delete(id);
         if (result.affected === 0) {
             throw new NotFoundException(`Client with ID ${id} not found`);
         }
         return { msg: 'Client deleted successfully', success: true };
+    } catch (error) {
+        console.error('Failed to delete client:', error);
+        return { msg: 'Failed to delete client', detailMsg: error, success: false };
     }
+}
 
-    async updateClient(id: number, updateData: CreateClientDto) {
-        const client = await this.getClientById(id);
-        Object.assign(client.data, updateData);
-        await this.clientRepository.save(client.data);
-        return { msg: 'Client updated successfully', success: true, data: client.data };
+async updateClient(id: number, request: CreateClientDto) {
+    try {
+        const client = await this.clientRepository.findOne({ where: { IdClient: id } });
+        if (!client) {
+            return { msg: 'Client not found', success: false };
+        }
+
+        client.Username = request.username;
+        client.FirstName = request.firstName;
+        client.LastName = request.lastName;
+        client.PhoneNumber = request.phoneNumber;
+        client.Document = request.document;
+        client.DocumentType = request.documentType;
+        client.MaritalStatus = request.maritalStatus;
+        client.Gender = request.gender;
+        client.Address = request.address;
+        client.Whatsapp = request.whatsapp;
+        client.Email = request.email;
+        client.BirthDate = request.BirthDate;
+
+        await this.clientRepository.save(client);
+
+        return {
+            msg: 'Client updated successfully',
+            success: true,
+            data: client,
+        };
+    } catch (error) {
+        console.error('Failed to update client:', error);
+        return { msg: 'Failed to update client', detailMsg: error, success: false };
     }
-    
+}
+
 }

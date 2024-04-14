@@ -44,4 +44,7 @@ export class ClientEntity {
 
     @Column()
     Email: string;
+
+    @Column()
+    BirthDate: Date;
 }
