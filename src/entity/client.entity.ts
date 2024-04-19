@@ -43,7 +43,7 @@ export class ClientEntity {
     Whatsapp: string;
 
     @Column()
-    Email: string;
+    Mail: string;
 
     @Column()
     BirthDate: Date;
