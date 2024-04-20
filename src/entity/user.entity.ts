@@ -37,7 +37,7 @@ export class UserEntity {
     RoleId: number;
 
     @Column()
-    Email: string;
+    Mail: string;
 
     @Column()
     BirthDate: string;

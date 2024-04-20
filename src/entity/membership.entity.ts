@@ -5,7 +5,7 @@ import { PaymentEntity } from './Payment.entity';
 @Entity("Membreship")
 export class MembershipEntity {
     @PrimaryGeneratedColumn()
-    idMembership: number;
+    IdMembership: number;
 
     @ManyToOne(() => UserEntity, user => user.Membreship)
     User: UserEntity;
@@ -17,20 +17,20 @@ export class MembershipEntity {
     Payment: PaymentEntity[];
     
     @Column()
-    startDate: string;
+    StartDate: string;
 
     @Column()
-    endDate: string;
+    EndDate: string;
 
     @Column()
-    price: string;
+    Price: string;
 
     @Column()
     discount: string;
 
     @Column()
-    type: number;
+    Type: number;
 
     @Column()
-    observation: string;
+    Observation: string;
 }

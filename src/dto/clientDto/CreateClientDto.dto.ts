@@ -1,14 +1,14 @@
 export class CreateClientDto {
-    username: string;
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
+    UserName: string;
+    FirstName: string;
+    LastName: string;
+    PhoneNumber: string;
     document: string;
-    documentType: string;
-    maritalStatus: string;
-    gender: string;
-    address: string;
-    whatsapp: string;
-    email: string;
+    DocumentType: string;
+    MaritalStatus: string;
+    Gender: string;
+    Address: string;
+    Whatsapp: string;
+    Mail: string;
     BirthDate:Date;
 }

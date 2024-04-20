@@ -14,16 +14,16 @@ export class UserService {
       try {
           // Crear una nueva entidad de usuario utilizando los datos del DTO
           const newUser = this.userRepository.create({
-              FirstName: request.firstName,
-              LastName: request.lastName,
-              Password: request.password,
-              PhoneNumber: request.phoneNumber,
-              Dni: request.dni,
-              Code: request.code,
-              Username: request.username,
-              Access: request.access,
-              RoleId: request.roleId,
-              Email: request.email,
+              FirstName: request.FirstName,
+              LastName: request.LastName,
+              Password: request.Password,
+              PhoneNumber: request.PhoneNumber,
+              Dni: request.Dni,
+              Code: 'as34',
+              Username: request.UserName,
+              Access: request.Access,
+              RoleId: request.RoleId,
+              Mail: request.Mail,
           });
   
           // Guardar la nueva entidad de usuario en la base de datos

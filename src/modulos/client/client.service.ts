@@ -16,17 +16,17 @@ export class ClientService {
         // Crear una nueva entidad de cliente utilizando los datos del DTO
         const newClient = new ClientEntity();
         newClient.Code = '121as';
-        newClient.Username = request.username;
-        newClient.FirstName = request.firstName;
-        newClient.LastName = request.lastName;
-        newClient.PhoneNumber = request.phoneNumber;
+        newClient.Username = request.UserName;
+        newClient.FirstName = request.FirstName;
+        newClient.LastName = request.LastName;
+        newClient.PhoneNumber = request.PhoneNumber;
         newClient.Document = request.document;
-        newClient.DocumentType = request.documentType;
-        newClient.MaritalStatus = request.maritalStatus;
-        newClient.Gender = request.gender;
-        newClient.Address = request.address;
-        newClient.Whatsapp = request.whatsapp;
-        newClient.Email = request.email;
+        newClient.DocumentType = request.DocumentType;
+        newClient.MaritalStatus = request.MaritalStatus;
+        newClient.Gender = request.Gender;
+        newClient.Address = request.Address;
+        newClient.Whatsapp = request.Whatsapp;
+        newClient.Mail = request.Mail;
         newClient.BirthDate = request.BirthDate;
 
         // Guardar la nueva entidad de cliente en la base de datos
@@ -95,17 +95,17 @@ async updateClient(id: number, request: CreateClientDto) {
             return { msg: 'Client not found', success: false };
         }
 
-        client.Username = request.username;
-        client.FirstName = request.firstName;
-        client.LastName = request.lastName;
-        client.PhoneNumber = request.phoneNumber;
+        client.Username = request.UserName;
+        client.FirstName = request.FirstName;
+        client.LastName = request.LastName;
+        client.PhoneNumber = request.PhoneNumber;
         client.Document = request.document;
-        client.DocumentType = request.documentType;
-        client.MaritalStatus = request.maritalStatus;
-        client.Gender = request.gender;
-        client.Address = request.address;
-        client.Whatsapp = request.whatsapp;
-        client.Email = request.email;
+        client.DocumentType = request.DocumentType;
+        client.MaritalStatus = request.MaritalStatus;
+        client.Gender = request.Gender;
+        client.Address = request.Address;
+        client.Whatsapp = request.Whatsapp;
+        client.Mail = request.Mail;
         client.BirthDate = request.BirthDate;
 
         await this.clientRepository.save(client);
