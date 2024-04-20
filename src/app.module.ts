@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './modulos/user/user.module';
 import { ClientModule } from './modulos/client/client.module';
+import { MembershipModule } from './modulos/membership/membership.module';
+import { PaymentModule } from './modulos/payment/payment.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -13,7 +15,7 @@ import { ClientModule } from './modulos/client/client.module';
     database: 'nibcqvah_zonaFit',
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
     synchronize: true
-}), UserModule, ClientModule, ],
+}), UserModule, ClientModule, MembershipModule, PaymentModule, ],
   controllers: [],
   providers: [],
 })
