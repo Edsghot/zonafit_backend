@@ -3,7 +3,7 @@ import { MembershipService } from './membership.service';
 import { CreateMembershipDto } from 'src/dto/membership/createMembreship.dto';
 import { UpdateMembreshipDto } from 'src/dto/membership/updateMembreshio.dto';
 
-@Controller('membership')
+@Controller('api/membership')
 export class MembershipController {
     constructor(private readonly membershipService: MembershipService) {}
 
