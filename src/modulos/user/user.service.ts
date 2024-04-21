@@ -10,7 +10,7 @@ export class UserService {
     constructor( @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>){}
 
-    
+
     async insertUser(request: CreateUserDto) {
       try {
           // Crear una nueva entidad de usuario utilizando los datos del DTO
@@ -70,8 +70,8 @@ async getUserById(userId: number) {
 
 async login(username: string, password: string) {
     try {
-        const user = await this.userRepository.findOne({ where: { Username: username } });
-        if (!user || user.Password !== password || !user.Access) {
+        const user = await this.userRepository.findOne({ where: { Username: username, Password: password } });
+        if (!user || user.Password !== password || !user.Access || user.Username !== username) {
             return { data: null, msg: 'Invalid username or password', success: false };
         }
 

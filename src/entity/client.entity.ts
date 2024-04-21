@@ -13,9 +13,6 @@ export class ClientEntity {
     Code: string;
 
     @Column()
-    Username: string;
-
-    @Column()
     FirstName: string;
 
     @Column()

@@ -15,12 +15,11 @@ export class ClientService {
     try {
         // Crear una nueva entidad de cliente utilizando los datos del DTO
         const newClient = new ClientEntity();
-        newClient.Code = '121as';
-        newClient.Username = request.UserName;
+        newClient.Code = '0001';
         newClient.FirstName = request.FirstName;
         newClient.LastName = request.LastName;
         newClient.PhoneNumber = request.PhoneNumber;
-        newClient.Document = request.document;
+        newClient.Document = request.Document;
         newClient.DocumentType = request.DocumentType;
         newClient.MaritalStatus = request.MaritalStatus;
         newClient.Gender = request.Gender;
@@ -97,11 +96,10 @@ async updateClient(id: number, request: CreateClientDto) {
             return { msg: 'Client not found', success: false };
         }
 
-        client.Username = request.UserName;
         client.FirstName = request.FirstName;
         client.LastName = request.LastName;
         client.PhoneNumber = request.PhoneNumber;
-        client.Document = request.document;
+        client.Document = request.Document;
         client.DocumentType = request.DocumentType;
         client.MaritalStatus = request.MaritalStatus;
         client.Gender = request.Gender;
@@ -109,6 +107,8 @@ async updateClient(id: number, request: CreateClientDto) {
         client.Whatsapp = request.Whatsapp;
         client.Mail = request.Mail;
         client.BirthDate = request.BirthDate;
+        client.Note = request.Note;
+        client.Image = request.Image;
 
         await this.clientRepository.save(client);
 

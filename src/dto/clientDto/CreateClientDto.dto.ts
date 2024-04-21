@@ -1,9 +1,8 @@
 export class CreateClientDto {
-    UserName: string;
     FirstName: string;
     LastName: string;
     PhoneNumber: string;
-    document: string;
+    Document: string;
     DocumentType: string;
     MaritalStatus: string;
     Gender: string;
