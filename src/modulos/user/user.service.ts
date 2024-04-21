@@ -52,6 +52,7 @@ export class UserService {
 async deleteUser(userId: number) {
     try {
         await this.userRepository.delete(userId);
+        return { msg: 'Success', success: true };
     } catch (error) {
         console.error('Failed to delete user:', error);
         return { msg: 'Failed to delete user', detailMsg: error, success: false };
