@@ -47,4 +47,10 @@ export class ClientEntity {
 
     @Column()
     BirthDate: Date;
+
+    @Column()
+    Note: string;
+
+    @Column()
+    Image: string;
 }

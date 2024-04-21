@@ -97,6 +97,6 @@ export class MembershipService {
       return {msg: "error al eliminar ", success: false}
     }
 
-    return {msg: "Se elimino correctamente", success: false}
+    return {msg: "Se elimino correctamente", success: true}
   }
 }

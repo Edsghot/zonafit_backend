@@ -43,8 +43,5 @@ export class UserEntity {
     BirthDate: string;
 
     @Column()
-    Note: string;
-
-    @Column()
     Image: string;
 }
