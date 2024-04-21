@@ -39,8 +39,8 @@ export class UserEntity {
     @Column()
     Mail: string;
 
-    @Column()
-    BirthDate: string;
+    @Column({ type: 'date' })
+    BirthDate: Date;
 
     @Column()
     Image: string;

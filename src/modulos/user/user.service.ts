@@ -10,6 +10,7 @@ export class UserService {
     constructor( @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>){}
 
+    
     async insertUser(request: CreateUserDto) {
       try {
           // Crear una nueva entidad de usuario utilizando los datos del DTO
@@ -24,6 +25,8 @@ export class UserService {
               Access: request.Access,
               RoleId: request.RoleId,
               Mail: request.Mail,
+              BirthDate: request.BirthDate,
+              Image: request.Image,
           });
   
           // Guardar la nueva entidad de usuario en la base de datos

@@ -8,4 +8,6 @@ export class CreateUserDto {
     readonly Access: boolean;
     readonly RoleId: number;
     readonly Mail: string;
+    readonly BirthDate: Date;
+    readonly Image: string;
   }
