@@ -28,6 +28,8 @@ export class ClientService {
         newClient.Whatsapp = request.Whatsapp;
         newClient.Mail = request.Mail;
         newClient.BirthDate = request.BirthDate;
+        newClient.Note = request.Note;
+        newClient.Image = request.Image;
 
         // Guardar la nueva entidad de cliente en la base de datos
         await this.clientRepository.save(newClient);

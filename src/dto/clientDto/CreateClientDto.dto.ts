@@ -11,4 +11,6 @@ export class CreateClientDto {
     Whatsapp: string;
     Mail: string;
     BirthDate:Date;
+    Note: string;
+    Image: string;
 }
