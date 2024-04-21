@@ -21,7 +21,7 @@ export class UserService {
               PhoneNumber: request.PhoneNumber,
               Dni: request.Dni,
               Code: 'as34',
-              Username: request.UserName,
+              UserName: request.UserName,
               Access: request.Access,
               RoleId: request.RoleId,
               Mail: request.Mail,
@@ -71,8 +71,8 @@ async getUserById(userId: number) {
 
 async login(username: string, password: string) {
     try {
-        const user = await this.userRepository.findOne({ where: { Username: username, Password: password } });
-        if (!user || user.Password !== password || !user.Access || user.Username !== username) {
+        const user = await this.userRepository.findOne({ where: { UserName: username, Password: password } });
+        if (!user || user.Password !== password || !user.Access || user.UserName !== username) {
             return { data: null, msg: 'Invalid username or password', success: false };
         }
 

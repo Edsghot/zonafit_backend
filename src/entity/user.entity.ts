@@ -13,7 +13,7 @@ export class UserEntity {
     Membreship: MembershipEntity[];
     
     @Column()
-    Username: string;
+    UserName: string;
 
     @Column()
     Password: string;
