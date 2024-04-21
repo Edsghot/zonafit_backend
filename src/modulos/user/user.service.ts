@@ -72,7 +72,7 @@ async getUserById(userId: number) {
 async login(username: string, password: string) {
     try {
         const user = await this.userRepository.findOne({ where: { UserName: username, Password: password } });
-        if (!user || user.Password !== password || user.UserName !== username) {
+        if (!user || user.Password !== password || !user.Access || user.UserName !== username) {
             return { data: null, msg: 'Invalid username or password', success: false };
         }
 
