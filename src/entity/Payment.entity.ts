@@ -1,37 +1,55 @@
 import { Entity, PrimaryGeneratedColumn, Column, Double, ManyToOne } from 'typeorm';
 import { MembershipEntity } from './membership.entity';
+import { ClientEntity } from './client.entity';
+import { UserEntity } from './user.entity';
 
 @Entity("Payment")
 export class PaymentEntity {
     @PrimaryGeneratedColumn()
     PaymentId: number;
 
-    @ManyToOne(() => MembershipEntity, membership => membership.Payment)
+    @ManyToOne(() => ClientEntity, client => client.Payment)
+    Client: ClientEntity;
+
+    @ManyToOne(() => MembershipEntity, Membership => Membership.Payment)
     Membership: MembershipEntity;
 
-    @Column({type: 'double'})
-    Total: number;
-
-    @Column({type: 'double'})
-    RemainingAmount: number;
-
-    @Column()
-    PaymentDate: Date;
-
-    @Column()
-    State: boolean;
-
-    @Column()
-    PaymentMethod: number;
-
-    @Column()
-    VoucherNumber: number;
+    @ManyToOne(() => UserEntity, user => user.Payment)
+    User: UserEntity;
     
     @Column()
-    PaymentReceipt: number;
+    StartDate: Date;
 
     @Column()
-    Number: string;
+    EndDate: Date;
+
+    @Column({type:'float'})
+    Total: number;
+
+
+    @Column({type:'float'})
+    Discount: number;
+
+    @Column({type:'float'})
+    PriceDiscount: number;
+
+    @Column({type:'float'})
+    QuantityDays: number;
+
+    @Column()
+    DatePayment: Date;
+
+    @Column({type:'float'})
+    Due: number;
+    
+    @Column({type: 'float'})
+    PrePaid: number;
+
+    @Column()
+    PaymentType: string;
+
+    @Column()
+    PaymentReceipt: string;
 
     @Column()
     Observation: string;

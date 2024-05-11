@@ -1,13 +1,14 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { MembershipEntity } from './membership.entity';
+import { PaymentEntity } from './Payment.entity';
 
 @Entity("Client")
 export class ClientEntity {
     @PrimaryGeneratedColumn()
     IdClient: number;
 
-    @OneToMany(() => MembershipEntity, membreship => membreship.Client)
-    Membreship: MembershipEntity[];
+    @OneToMany(() => PaymentEntity, payment => payment.Client)
+    Payment: PaymentEntity[];
     
     @Column()
     Code: string;
