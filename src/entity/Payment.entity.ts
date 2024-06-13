@@ -53,5 +53,8 @@ export class PaymentEntity {
 
     @Column()
     Observation: string;
+
+    @Column()
+    DateRegister:Date;
 }
 

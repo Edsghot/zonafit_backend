@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from 'src/dto/userDto/CreateUserDto.dto';
 import { UserEntity } from 'src/entity/user.entity';
@@ -62,6 +62,9 @@ async deleteUser(userId: number) {
 async getUserById(userId: number) {
     try {
         const user = await this.userRepository.findOne({ where: { IdUser: userId } });
+        if(!user){
+            return { msg: 'no se encontro el usuario', success: false, data: null };
+        }
         return { data: user, msg: 'Success', success: true };
     } catch (error) {
         console.error('Failed to get user by ID:', error);
@@ -72,6 +75,8 @@ async getUserById(userId: number) {
 async login(username: string, password: string) {
     try {
         const user = await this.userRepository.findOne({ where: { UserName: username, Password: password } });
+
+        
         if (!user || user.Password !== password || !user.Access || user.UserName !== username) {
             return { data: null, msg: 'Invalid username or password', success: false };
         }
