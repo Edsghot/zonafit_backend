@@ -4,6 +4,7 @@ import { UserModule } from './modulos/user/user.module';
 import { ClientModule } from './modulos/client/client.module';
 import { MembershipModule } from './modulos/membership/membership.module';
 import { PaymentModule } from './modulos/payment/payment.module';
+import { ProductModule } from './modulos/product/product.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -15,7 +16,7 @@ import { PaymentModule } from './modulos/payment/payment.module';
     database: 'nibcqvah_zonaFit',
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
     synchronize: true
-}), UserModule, ClientModule, MembershipModule, PaymentModule, ],
+}), UserModule, ClientModule, MembershipModule, PaymentModule, ProductModule, ],
   controllers: [],
   providers: [],
 })
