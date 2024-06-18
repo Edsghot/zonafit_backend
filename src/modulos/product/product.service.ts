@@ -22,6 +22,7 @@ export class ProductService {
             newProduct.Price = request.Price;
             newProduct.PurchasePrice = request.PurchasePrice;
             newProduct.Type = request.Type;
+            newProduct.Stock=request.Stock;
 
             await this.productRepository.save(newProduct);
     
@@ -81,6 +82,7 @@ export class ProductService {
             product.Price = request.Price;
             product.PurchasePrice = request.PurchasePrice;
             product.Type = request.Type;
+            product.Stock=request.Stock;
     
             await this.productRepository.save(product);
     
