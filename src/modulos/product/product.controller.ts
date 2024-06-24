@@ -1,14 +1,25 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, FileTypeValidator, Get, MaxFileSizeValidator, Param, ParseFilePipe, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from 'src/dto/productDto/CreateProductDto.dto';
+import { CloudinaryService } from 'src/services/cloudinary/cloudinary.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { FOLDER_PRODUCTOS } from 'src/Config/constantService';
 
 @Controller('api/product')
 export class ProductController {
 
-    constructor (private productService: ProductService){}
+    constructor (private productService: ProductService,
+        private cloudinaryService: CloudinaryService,){}
 
     @Post()
-    async create(@Body() createProductDto: CreateProductDto) {
+    @UseInterceptors(FileInterceptor('file'))
+    async insert(
+      @Body() createProductDto: CreateProductDto,
+      @UploadedFile() file?: Express.Multer.File){
+        var res = await this.cloudinaryService.uploadFile(file, FOLDER_PRODUCTOS);
+
+        createProductDto.Image = res.secure_url;
+
         return await this.productService.insertProduct(createProductDto);
     }
 

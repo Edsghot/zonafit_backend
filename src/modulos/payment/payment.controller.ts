@@ -11,22 +11,22 @@ export class PaymentController {
        return await this.servicePayment.createPayment(request);
       }
 
-    @Get()
+    @Get('/all')
     async findAll() {
       return await this.servicePayment.findAllPayments();
     }
 
-    @Get(':id')
+    @Get('/getById/:id')
     async findOne(@Param('id') id: number) {
       return await this.servicePayment.findPaymentById(id);
     }
 
-    @Put(':id')
+    @Put('/update/:id')
     async update(@Param('id') id: number, @Body() updatePaymentDto: CreatePaymentDto) {
         return await this.servicePayment.updatePayment(id, updatePaymentDto);
     }
 
-    @Delete(':id')
+    @Delete('/delete/:id')
     async remove(@Param('id') id: number) {
       return await this.servicePayment.deletePayment(id);
     }

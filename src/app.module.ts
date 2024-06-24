@@ -5,9 +5,10 @@ import { ClientModule } from './modulos/client/client.module';
 import { MembershipModule } from './modulos/membership/membership.module';
 import { PaymentModule } from './modulos/payment/payment.module';
 import { ProductModule } from './modulos/product/product.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TypeOrmModule.forRoot({
+  imports: [ConfigModule.forRoot({ isGlobal: true }),TypeOrmModule.forRoot({
     type: 'mysql',
     host: 'ccontrolz.com',
     port: 3306,
