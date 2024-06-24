@@ -6,15 +6,15 @@ export const CloudinaryProvider = {
   provide: 'CLOUDINARY',
   useFactory: (configService: ConfigService) => {
     console.log('Cloudinary Config:', {
-      cloud_name: configService.get('CLOUDINARY_NAME'),
-      api_key: configService.get('CLOUDINARY_API_KEY'),
-      api_secret: configService.get('CLOUDINARY_API_SECRET'),
+      cloud_name: "dbdfy2iui",
+      api_key: "484699392528313",
+      api_secret: "f-vBECtkBOAwPeNjqmNoz-r2_ss",
     });
 
     return cloudinary.config({
-      cloud_name: configService.get('CLOUDINARY_NAME'),
-      api_key: configService.get('CLOUDINARY_API_KEY'),
-      api_secret: configService.get('CLOUDINARY_API_SECRET'),
+      cloud_name: "dbdfy2iui",
+      api_key: "484699392528313",
+      api_secret: "f-vBECtkBOAwPeNjqmNoz-r2_ss",
     });
   },
   inject: [ConfigService],

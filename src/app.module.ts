@@ -6,6 +6,7 @@ import { MembershipModule } from './modulos/membership/membership.module';
 import { PaymentModule } from './modulos/payment/payment.module';
 import { ProductModule } from './modulos/product/product.module';
 import { ConfigModule } from '@nestjs/config';
+import { FreezingDayModule } from './modulos/freezing-day/freezing-day.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),TypeOrmModule.forRoot({
@@ -17,7 +18,7 @@ import { ConfigModule } from '@nestjs/config';
     database: 'nibcqvah_zonaFit',
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
     synchronize: true
-}), UserModule, ClientModule, MembershipModule, PaymentModule, ProductModule, ],
+}), UserModule, ClientModule, MembershipModule, PaymentModule, ProductModule, FreezingDayModule, ],
   controllers: [],
   providers: [],
 })

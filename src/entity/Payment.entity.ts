@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, Double, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Double, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { MembershipEntity } from './membership.entity';
 import { ClientEntity } from './client.entity';
 import { UserEntity } from './user.entity';
+import { FreezingDayEntity } from './freezingDay.entity';
 
 @Entity("Payment")
 export class PaymentEntity {
