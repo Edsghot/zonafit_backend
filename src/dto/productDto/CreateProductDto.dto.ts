@@ -5,4 +5,5 @@ export class CreateProductDto {
     Price:number;
     PurchasePrice:number;
     Type:number;
+    Stock:number;
 }

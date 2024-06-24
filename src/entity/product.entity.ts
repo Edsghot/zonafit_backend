@@ -31,4 +31,7 @@ export class ProductEntity{
 
     @Column()
     Type:TypeProduct;
+
+    @Column()
+    Stock:number;
 }
