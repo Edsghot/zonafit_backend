@@ -22,8 +22,8 @@ export class FreezingDayController {
     }
 
     @Put('/update/:id')
-    async update(@Param('id') id: number, @Body() updatePaymentDto: CreateFreezingDayDto) {
-        return await this.serviceFreezingDay.updateFreezingDay(id, updatePaymentDto);
+    async update(@Param('id') id: number, @Body() updateFreezingDaytDto: CreateFreezingDayDto) {
+        return await this.serviceFreezingDay.updateFreezingDay(id, updateFreezingDaytDto);
     }
 
     @Delete('/delete/:id')
