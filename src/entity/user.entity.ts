@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { MembershipEntity } from './membership.entity';
 import { PaymentEntity } from './Payment.entity';
+import { AttendanceEntity } from './attendance.entity';
 
 @Entity("User")
 export class UserEntity {
@@ -13,6 +14,9 @@ export class UserEntity {
     @OneToMany(() => PaymentEntity, payment => payment.User)
     Payment: PaymentEntity[];
 
+    @OneToMany(() => AttendanceEntity, attendance => attendance.User)
+    Attendance: AttendanceEntity[];
+    
     @Column()
     UserName: string;
 

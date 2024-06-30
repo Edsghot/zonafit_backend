@@ -56,8 +56,8 @@ export class AttendanceService {
 
       async findAllByCode(code:string) {
         try {
-          const attendance= await this.attendanceRepository.createQueryBuilder('attendace').
-          where('attendance.User = :user', { user: code })
+          const attendance = await this.attendanceRepository.query("SELECT * FROM Attendance INNER join Client on Attendance.IdClient = Client.IdClient INNER join User on Attendance.IdUser = User.IdUser where Client.Code = "+code);
+      
           if (!attendance) {
             throw new NotFoundException(`Asistencias con codigo ${code} no se encontro`);
           }
@@ -68,19 +68,21 @@ export class AttendanceService {
         }
       }
 
-      async findAllByDni(dni:string) {
+      async findAllByDni(dni: string) {
         try {
-          const attendance= await this.attendanceRepository.createQueryBuilder('attendace').
-          where('attendance.Client = :client', { client: dni })
-          if (!attendance) {
-            throw new NotFoundException(`Asistencias con DNI ${dni} no se encontro`);
+          const attendance = await this.attendanceRepository.query("SELECT * FROM Attendance INNER join Client on Attendance.IdClient = Client.IdClient INNER join User on Attendance.IdUser = User.IdUser where Client.Document = "+dni);
+      
+          if (!attendance.length) {
+            throw new NotFoundException(`No se encontraron asistencias con DNI ${dni}`);
           }
+      
           return { msg: 'Asistencias encontradas', success: true, data: attendance };
         } catch (error) {
-          console.error('Fallo al obtener el asistencias por dni:', error);
-          return { msg: 'Fallo al obtener el asistencias por dni', detailMsg: error.message, success: false };
+          console.error('Fallo al obtener las asistencias por DNI:', error);
+          return { msg: 'Fallo al obtener las asistencias por DNI', detailMsg: error.message, success: false };
         }
       }
+      
 
       async findAttendanceById(id: number) {
         try {

@@ -1,20 +1,19 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ClientEntity } from "./client.entity";
 import { UserEntity } from "./user.entity";
-
 @Entity("Attendance")
 export class AttendanceEntity {
     @PrimaryGeneratedColumn()
     IdAttendance: number;
 
-    @OneToOne(() => ClientEntity)
-    @JoinColumn({name:"idClient"})
+    @ManyToOne(() => ClientEntity)
+    @JoinColumn({ name: "IdClient" })
     Client: ClientEntity;
 
-    @OneToOne(() => UserEntity)
-    @JoinColumn({name:"idUser"})
+    @ManyToOne(() => UserEntity)
+    @JoinColumn({ name: "IdUser" })
     User: UserEntity;
 
     @Column()
-    AttendanceDate:Date;
+    AttendanceDate: Date;
 }
