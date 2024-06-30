@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAttendanceDto } from 'src/dto/Attendance/CreateAttendance.dto';
 import { AttendanceEntity } from 'src/entity/attendance.entity';
@@ -59,7 +59,7 @@ export class AttendanceService {
           const attendance = await this.attendanceRepository.query("SELECT * FROM Attendance INNER join Client on Attendance.IdClient = Client.IdClient INNER join User on Attendance.IdUser = User.IdUser where Client.Code = "+code);
       
           if (!attendance) {
-            throw new NotFoundException(`Asistencias con codigo ${code} no se encontro`);
+            return {msg:"Asistencias con codigo "+code+" no se encontro"};
           }
           return { msg: 'Asistencias encontradas', success: true, data: attendance };
         } catch (error) {
@@ -73,7 +73,7 @@ export class AttendanceService {
           const attendance = await this.attendanceRepository.query("SELECT * FROM Attendance INNER join Client on Attendance.IdClient = Client.IdClient INNER join User on Attendance.IdUser = User.IdUser where Client.Document = "+dni);
       
           if (!attendance.length) {
-            throw new NotFoundException(`No se encontraron asistencias con DNI ${dni}`);
+            return {msg:"Asistencias con codigo "+dni+" no se encontro"};
           }
       
           return { msg: 'Asistencias encontradas', success: true, data: attendance };
@@ -88,7 +88,7 @@ export class AttendanceService {
         try {
           const attendance= await this.attendanceRepository.findOne({ where: { IdAttendance: id }, relations:['Client','User'] });
           if (!attendance) {
-            throw new NotFoundException(`Asistencia con ID ${id} no se encontro`);
+            return {msg:`Asistencia con ID ${id} no se encontro`};
           }
           return { msg: 'Asistencia encontrado', success: true, data: attendance };
         } catch (error) {
@@ -134,7 +134,7 @@ export class AttendanceService {
         try {
           const attendance = await this.attendanceRepository.delete(id);
           if (attendance.affected === 0) {
-            throw new NotFoundException(`Asistencia con ID ${id} no se encontro`);
+            return {msg:`Asistencia con ID ${id} no se encontro`};
           }
           return { msg: 'Asistencia eliminado correctamente', success: true };
         } catch (error) {
