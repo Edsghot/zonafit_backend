@@ -80,6 +80,24 @@ export class PaymentService {
     }
   }
 
+  async findAllByUserCode(userCode: number) {
+    const user = await this.userRepository.findOne({ where: { Code: userCode } });
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    var data = this.paymentRepository.find({
+      where: { User: user },
+      relations: ['Client', 'Membership', 'User'],
+    });
+
+    return {
+      msg: 'Pago actualizado correctamente',
+      success: true,
+      data: data,
+    };
+  }
+
   async updatePayment(id: number, request: CreatePaymentDto) {
     try {
       const payment = await this.paymentRepository.findOne({ where: { PaymentId: id } });

@@ -9,7 +9,7 @@ export class UserEntity {
     IdUser: number;
 
     @Column()
-    Code: string;
+    Code: number;
 
     @OneToMany(() => PaymentEntity, payment => payment.User)
     Payment: PaymentEntity[];

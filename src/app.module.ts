@@ -8,6 +8,8 @@ import { ProductModule } from './modulos/product/product.module';
 import { ConfigModule } from '@nestjs/config';
 import { FreezingDayModule } from './modulos/freezing-day/freezing-day.module';
 import { AttendanceModule } from './modulos/attendance/attendance.module';
+import { CloudinaryModule } from './services/cloudinary/cloudinary.module';
+import { CloudinaryService } from './services/cloudinary/cloudinary.service';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),TypeOrmModule.forRoot({
@@ -19,8 +21,8 @@ import { AttendanceModule } from './modulos/attendance/attendance.module';
     database: 'nibcqvah_zonaFit',
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
     synchronize: true
-}), UserModule, ClientModule, MembershipModule, PaymentModule, ProductModule, FreezingDayModule, AttendanceModule, ],
+}), UserModule, ClientModule, MembershipModule, PaymentModule, ProductModule, FreezingDayModule, AttendanceModule,CloudinaryModule ],
   controllers: [],
-  providers: [],
+  providers: [CloudinaryService],
 })
 export class AppModule {}

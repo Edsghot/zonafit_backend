@@ -15,7 +15,7 @@ export class ClientEntity {
     Attendance: AttendanceEntity[];
     
     @Column()
-    Code: string;
+    Code: number;
 
     @Column()
     FirstName: string;
@@ -55,4 +55,7 @@ export class ClientEntity {
 
     @Column()
     Image: string;
+
+    @Column()
+    Created: Date;
 }

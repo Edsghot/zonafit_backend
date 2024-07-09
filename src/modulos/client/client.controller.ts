@@ -19,9 +19,14 @@ export class ClientController {
         return await this.clientService.getAllClients();
     }
 
-    @Get(':id')
+    @Get('/getById/:id')
     async findOne(@Param('id') id: string) {
         return await this.clientService.getClientById(+id);
+    }
+
+    @Get('/getCode/:code')
+    async GetByCode(@Param('code') code: number) {
+        return await this.clientService.getClientByCode(code);
     }
 
     @Get('dni/:dni')

@@ -1,4 +1,5 @@
-export class CreateUserDto {
+export class UpdateUserDto {
+    readonly IdUser: number;
     readonly UserName: string;
     readonly Password: string;
     readonly FirstName: string;

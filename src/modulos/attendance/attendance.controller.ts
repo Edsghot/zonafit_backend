@@ -32,6 +32,11 @@ export class AttendanceController {
       return await this.serviceAttendance.findAttendanceById(id);
     }
 
+    @Get('/getBySearch/:search')
+    async findNamePhone(@Param('search') search: string) {
+      return await this.serviceAttendance.getAllAttendancesOfClient(search);
+    }
+
     @Put('/update/:id')
     async update(@Param('id') id: number, @Body() updateAttendanceDto: CreateAttendanceDto) {
         return await this.serviceAttendance.updateAttendance(id, updateAttendanceDto);
@@ -41,4 +46,5 @@ export class AttendanceController {
     async remove(@Param('id') id: number) {
       return await this.serviceAttendance.deleteAttendance(id);
     }
+
 }

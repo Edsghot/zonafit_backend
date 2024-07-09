@@ -21,6 +21,11 @@ export class PaymentController {
       return await this.servicePayment.findPaymentById(id);
     }
 
+    @Get('/user/:code')
+    async getPaymentsByUserCode(@Param('code') code: number) {
+      return this.servicePayment.findAllByUserCode(code);
+    }
+
     @Put('/update/:id')
     async update(@Param('id') id: number, @Body() updatePaymentDto: CreatePaymentDto) {
         return await this.servicePayment.updatePayment(id, updatePaymentDto);

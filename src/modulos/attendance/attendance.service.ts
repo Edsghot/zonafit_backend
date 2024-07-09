@@ -54,6 +54,31 @@ export class AttendanceService {
         }
       }
 
+      async  getAllAttendancesOfClient(searchTerm: string){
+    
+        const client = await this.clientRepository.findOne({
+            where: [
+                { FirstName: searchTerm },
+                { LastName: searchTerm },
+                { PhoneNumber: searchTerm }
+            ]
+        });
+    
+        if (!client) {
+            return { msg:`Cliente con término de búsqueda "${searchTerm}" no encontrado.`, success: true, data: null };
+        }
+    
+        // Obtener todas las asistencias del cliente encontrado
+        const attendances = await this.attendanceRepository.find({
+            where: {
+                Client: client
+            },
+            relations: ['Client', 'User']  // Incluir las relaciones para obtener los objetos relacionados completos
+        });
+    
+        return { msg:"Asistencias encontradas", success: true, data: attendances };
+    }
+
       async findAllByCode(code:string) {
         try {
           const attendance = await this.attendanceRepository.query("SELECT * FROM Attendance INNER join Client on Attendance.IdClient = Client.IdClient INNER join User on Attendance.IdUser = User.IdUser where Client.Code = "+code);

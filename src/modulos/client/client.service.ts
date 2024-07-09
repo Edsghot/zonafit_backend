@@ -11,11 +11,20 @@ export class ClientService {
     private readonly clientRepository: Repository<ClientEntity>,
   ) {}
 
+  async getMaxClientCode(): Promise<number> {
+    const result = await this.clientRepository.query('SELECT MAX(Code) as maxCode FROM Client');
+    const maxCodeClient = result[0]?.maxCode;
+
+    // Si no hay un maxCodeClient, establece 2000 como el valor inicial
+    return maxCodeClient !== null && maxCodeClient !== undefined ? parseInt(maxCodeClient, 10) : 2000;
+  }
   async insertClient(request: CreateClientDto) {
     try {
         // Crear una nueva entidad de cliente utilizando los datos del DTO
         const newClient = new ClientEntity();
-        newClient.Code = '0001';
+
+        const maxCode = await this.getMaxClientCode();
+        newClient.Code = maxCode + 1;
         newClient.FirstName = request.FirstName;
         newClient.LastName = request.LastName;
         newClient.PhoneNumber = request.PhoneNumber;
@@ -29,6 +38,7 @@ export class ClientService {
         newClient.BirthDate = request.BirthDate;
         newClient.Note = request.Note;
         newClient.Image = request.Image;
+        newClient.Created = new Date();
 
         // Guardar la nueva entidad de cliente en la base de datos
         await this.clientRepository.save(newClient);
@@ -39,6 +49,19 @@ export class ClientService {
         return { msg: 'Failed to insert client', detailMsg: error, success: false };
     }
 }
+
+async getClientByCode(code: number){
+    const client = await this.clientRepository.findOne({
+      where: { Code: code },
+      relations: ['Payment', 'Attendance']
+    });
+
+    if (!client) {
+        return { msg: 'No se encontro clientes', success: true, data: null };
+    }
+
+    return { msg: 'lista de clientes', success: true, data: client };
+  }
 
 async getAllClients() {
     try {
