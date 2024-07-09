@@ -83,7 +83,11 @@ export class PaymentService {
   async findAllByUserCode(userCode: number) {
     const user = await this.userRepository.findOne({ where: { Code: userCode } });
     if (!user) {
-      throw new Error('User not found');
+      return {
+        msg: 'No se encontro el user',
+        success: false,
+        data: null,
+      };
     }
 
     var data = this.paymentRepository.find({
