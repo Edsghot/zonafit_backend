@@ -10,6 +10,7 @@ import { FreezingDayModule } from './modulos/freezing-day/freezing-day.module';
 import { AttendanceModule } from './modulos/attendance/attendance.module';
 import { CloudinaryModule } from './services/cloudinary/cloudinary.module';
 import { CloudinaryService } from './services/cloudinary/cloudinary.service';
+import { VaucherModule } from './modulos/vaucher/vaucher.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),TypeOrmModule.forRoot({
@@ -21,7 +22,7 @@ import { CloudinaryService } from './services/cloudinary/cloudinary.service';
     database: 'nibcqvah_zonaFit',
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
     synchronize: true
-}), UserModule, ClientModule, MembershipModule, PaymentModule, ProductModule, FreezingDayModule, AttendanceModule,CloudinaryModule ],
+}), UserModule, ClientModule, MembershipModule, PaymentModule, ProductModule, FreezingDayModule, AttendanceModule,CloudinaryModule,VaucherModule ],
   controllers: [],
   providers: [CloudinaryService],
 })

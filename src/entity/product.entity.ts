@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { CartEntity } from "./Carrito.entity";
 
 export enum TypeProduct {
     Wisky = 0,
@@ -34,4 +35,7 @@ export class ProductEntity{
 
     @Column()
     Stock:number;
+
+    @ManyToMany(() => CartEntity, cart => cart.products)
+    Carts: CartEntity[];
 }

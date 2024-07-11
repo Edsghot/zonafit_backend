@@ -1,6 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from 'src/dto/paymentDto/CreatePayment.dto';
+import { RepairPaymentDto } from 'src/dto/paymentDto/RepairPayment.dto';
+import { CreateCartDto } from 'src/dto/Cart/CreateCart.dto';
 
 @Controller('api/payment')
 export class PaymentController {
@@ -10,6 +12,15 @@ export class PaymentController {
     async createPayment(@Body()request: CreatePaymentDto) {
        return await this.servicePayment.createPayment(request);
       }
+      @Post('/repairPayment')
+      async RepairPayment(@Body()request: RepairPaymentDto) {
+         return await this.servicePayment.RepairPayment(request);
+        }
+
+        @Post('/insertCart')
+      async InsertCart(@Body()request: CreateCartDto) {
+         return await this.servicePayment.InserCart(request);
+        }
 
     @Get('/all')
     async findAll() {

@@ -7,20 +7,17 @@ export class VaucherEntity {
   VoucherId: number;
 
   @Column()
-  idClient: number;
+  IdClient: number;
 
   @Column()
-  code: string;
+  Code: string;
 
   @Column('float')
-  amount: number;
+  Amount: number;
 
   @Column()
-  expirationDate: Date;
+  Description: string;
 
   @Column()
-  isActive: boolean;
-
-  @Column()
-  dateRegister: Date;
+  DateRegister: Date;
 }

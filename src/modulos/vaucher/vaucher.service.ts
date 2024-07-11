@@ -12,13 +12,21 @@ export class VaucherService {
       ) {}
     
       async createVoucher(req: CreateVaucherDto) {
+        
+        var Cod;
+        var vau = await this.voucherRepository.findOne({order:{DateRegister: 'DESC'}});
+
+        Cod = vau.Code;
+        if(!vau){
+          Cod = 3000;
+        }
+        
         var res = new VaucherEntity();
-        res.amount = req.Amount;
-        res.code = req.Code;
-        res.dateRegister = req.DateRegister;
-        res.expirationDate = req.ExpirationDate;
-        res.idClient = req.clientIdClient;
-        res.isActive = req.IsActive;
+        res.Amount = req.Amount;
+        res.Code = Cod;
+        res.DateRegister = new Date();
+        res.IdClient = req.IdClient;
+        res.Description = req.Description;
         const voucher = this.voucherRepository.create(res);
          await this.voucherRepository.save(voucher);
         return {msg:"ok",success: true}

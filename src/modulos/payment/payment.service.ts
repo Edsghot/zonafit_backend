@@ -1,22 +1,32 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateVaucherDto } from 'src/dto/Vaucher/CreateVaucher.dto';
 import { CreatePaymentDto } from 'src/dto/paymentDto/CreatePayment.dto';
+import { RepairPaymentDto } from 'src/dto/paymentDto/RepairPayment.dto';
 import { PaymentEntity } from 'src/entity/Payment.entity';
 import { ClientEntity } from 'src/entity/client.entity';
 import { MembershipEntity } from 'src/entity/membership.entity';
 import { UserEntity } from 'src/entity/user.entity';
 import { Repository } from 'typeorm';
+import { VaucherService } from '../vaucher/vaucher.service';
+import { CartEntity } from 'src/entity/Carrito.entity';
+import { CreateCartDto } from 'src/dto/Cart/CreateCart.dto';
+import { ProductEntity } from 'src/entity/product.entity';
 
 @Injectable()
 export class PaymentService {
-  constructor(@InjectRepository(UserEntity)
+  constructor(@InjectRepository(ProductEntity)
+  private readonly productRepository: Repository<ProductEntity>,
+@InjectRepository(UserEntity)
   private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(MembershipEntity)
     private readonly membershipRepository: Repository<MembershipEntity>,
     @InjectRepository(ClientEntity)
     private readonly clientRepository: Repository<ClientEntity>,
+    @InjectRepository(CartEntity)
+    private readonly cartRepository: Repository<CartEntity>,
     @InjectRepository(PaymentEntity)
-    private readonly paymentRepository: Repository<PaymentEntity>) { }
+    private readonly paymentRepository: Repository<PaymentEntity>, private vaucherService: VaucherService) { }
 
   async createPayment(request: CreatePaymentDto) {
     try {
@@ -45,12 +55,55 @@ export class PaymentService {
       payment.PaymentType = request.PaymentType;
       payment.PaymentReceipt = request.PaymentReceipt;
       payment.Observation = request.Observation;
+      payment.DateRegister = new Date();
       await this.paymentRepository.save(payment);
 
       return { msg: 'se inserto correctamente', success: true };
     } catch (e) {
       return { msg: 'error al insertar', sucess: false, detailMsg: e };
     }
+  }
+
+  async RepairPayment(request: RepairPaymentDto){
+    const { IdClient } = request;
+
+    const client = await this.clientRepository.find({where: {IdClient: IdClient}});
+    if (!client) {
+      return { msg: 'No se encontro el cliente', success: false };
+    }
+
+    // Buscar el último pago del cliente
+    const lastPayment = await this.paymentRepository.findOne({
+      where: { Client: client },
+      order: { DatePayment: 'DESC' }
+    });
+
+    if (!lastPayment) {
+        return {msg: "no se encontro el payment", success: false}
+    }
+
+    if(lastPayment.Due == 0){
+      return {msg: "No tiene deuda", success: false}
+    }
+
+    lastPayment.Due = lastPayment.Due - request.Amount;
+    lastPayment.Total = lastPayment.Total + request.Amount;
+  
+    await this.paymentRepository.save(lastPayment);
+
+
+    var vaucher = new CreateVaucherDto();
+      vaucher.IdClient = request.IdClient;
+      vaucher.Description = "Pagando la deuda de "+request.Amount;
+      vaucher.Amount = request.Amount;
+
+     var resVaucher = await this.vaucherService.createVoucher(vaucher);
+
+     if(!resVaucher.success){
+      return {msg:"Error al registrar el vaucher", success: false};
+     }
+
+    return {msg:'Exitoso',success:true};
   }
 
   async findAllPayments() {
@@ -100,6 +153,42 @@ export class PaymentService {
       success: true,
       data: data,
     };
+  }
+
+  
+  async InserCart(cartDto: CreateCartDto) {
+    const { Price, Products, Stocks } = cartDto;
+
+    const productEntities: ProductEntity[] = [];
+
+    for (let i = 0; i < Products.length; i++) {
+      const productId = Products[i];
+      const stockToDeduct = Stocks[i];
+
+      const product = await this.productRepository.findOne({where:{IdProduct:productId}});
+
+      if (!product) {
+        return {msg: `Product with ID ${productId} not found`,success: false}
+      }
+
+      if (product.Stock < stockToDeduct) {
+        
+        return {msg: `Not enough stock for product with ID ${productId}`,success: false}
+      }
+
+      product.Stock -= stockToDeduct;
+      await this.productRepository.save(product);
+
+      productEntities.push(product);
+    }
+
+    const newCart = new CartEntity();
+    newCart.price = Price;
+    newCart.products = productEntities;
+
+    var data = await this.cartRepository.save(newCart);
+    return {msg: `Se inserto correctamente`,success: true, data: data}
+    
   }
 
   async updatePayment(id: number, request: CreatePaymentDto) {
