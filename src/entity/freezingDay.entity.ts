@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { PaymentEntity } from "./Payment.entity";
 
 @Entity("freezingDay")
@@ -6,9 +6,8 @@ export class FreezingDayEntity{
     @PrimaryGeneratedColumn()
     IdFreezingDay: number;
 
-    @OneToOne(() => PaymentEntity)
-    @JoinColumn({name:"idPayment"})
-    Payment: PaymentEntity;
+    @OneToMany(() => PaymentEntity, payment => payment.Membership)
+    Payment: PaymentEntity[];
 
     @Column()
     NumberOfDay:number;

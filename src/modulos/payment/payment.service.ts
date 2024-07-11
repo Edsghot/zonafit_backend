@@ -12,6 +12,7 @@ import { VaucherService } from '../vaucher/vaucher.service';
 import { CartEntity } from 'src/entity/Carrito.entity';
 import { CreateCartDto } from 'src/dto/Cart/CreateCart.dto';
 import { ProductEntity } from 'src/entity/product.entity';
+import { FreezingDayEntity } from 'src/entity/freezingDay.entity';
 
 @Injectable()
 export class PaymentService {
@@ -19,6 +20,8 @@ export class PaymentService {
   private readonly productRepository: Repository<ProductEntity>,
 @InjectRepository(UserEntity)
   private readonly userRepository: Repository<UserEntity>,
+  @InjectRepository(FreezingDayEntity)
+  private readonly freezingRepository: Repository<FreezingDayEntity>,
     @InjectRepository(MembershipEntity)
     private readonly membershipRepository: Repository<MembershipEntity>,
     @InjectRepository(ClientEntity)
@@ -133,28 +136,82 @@ export class PaymentService {
     }
   }
 
+ 
   async findAllByUserCode(userCode: number) {
     const user = await this.userRepository.findOne({ where: { Code: userCode } });
     if (!user) {
       return {
-        msg: 'No se encontro el user',
+        msg: 'No se encontró el usuario',
         success: false,
         data: null,
       };
     }
 
-    var data = this.paymentRepository.find({
+    const payments = await this.paymentRepository.find({
       where: { User: user },
-      relations: ['Client', 'Membership', 'User'],
+      relations: ['Client', 'Membership', 'FreezingDay'],
     });
+    const client = await this.clientRepository.findOne({ where: { Payment: payments } });
+    const membership = await this.membershipRepository.findOne({ where: { Payment: payments } });
+    const freezingDay = await this.freezingRepository.findOne({ where: { Payment: payments } });
+
+    const formattedPayments = await Promise.all(payments.map(async (payment) => {
+
+      return {
+        PaymentId: payment.PaymentId,
+        StartDate: payment.StartDate,
+        EndDate: payment.EndDate,
+        Total: payment.Total,
+        Discount: payment.Discount,
+        PriceDiscount: payment.PriceDiscount,
+        QuantityDays: payment.QuantityDays,
+        DatePayment: payment.DatePayment,
+        Due: payment.Due,
+        PrePaid: payment.PrePaid,
+        PaymentType: payment.PaymentType,
+        PaymentReceipt: payment.PaymentReceipt,
+        Observation: payment.Observation,
+        DateRegister: payment.DateRegister,
+        Client: client ? {
+          IdClient: client.IdClient,
+          Code: client.Code,
+          FirstName: client.FirstName,
+          LastName: client.LastName,
+          PhoneNumber: client.PhoneNumber,
+          Document: client.Document,
+          DocumentType: client.DocumentType,
+          MaritalStatus: client.MaritalStatus,
+          Gender: client.Gender,
+          Address: client.Address,
+          Whatsapp: client.Whatsapp,
+          Mail: client.Mail,
+          BirthDate: client.BirthDate,
+          Note: client.Note,
+          Image: client.Image,
+          Created: client.Created,
+        } : null,
+        Membership: membership ? {
+          IdMembership: membership.IdMembership,
+          Name: membership.Name,
+          // otros campos de Membership si es necesario
+        } : null,
+        FreezingDay: freezingDay ? {
+          IdFreezingDay: freezingDay.IdFreezingDay,
+          Date: freezingDay.FrozenDate,
+          // otros campos de FreezingDay si es necesario
+        } : null,
+      };
+    }));
 
     return {
-      msg: 'Pago actualizado correctamente',
+      msg: 'Lista de pagos',
       success: true,
-      data: data,
+      data: formattedPayments,
+      dataClient: client,
+      dataMembership: membership,
+
     };
   }
-
   
   async InserCart(cartDto: CreateCartDto) {
     const { Price, Products, Stocks } = cartDto;

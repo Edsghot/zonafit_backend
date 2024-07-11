@@ -15,11 +15,12 @@ export class FreezingDayService {
     async createFreezingDay(request: CreateFreezingDayDto) {
         try {
           var freezingDay = new FreezingDayEntity();
-          var res = await this.paymentRepository.findOne({ where: { PaymentId: request.idPayment } })
-          if (!res) {
+
+          var Payment = await this.paymentRepository.findOne({where:{PaymentId: request.IdPayment}});
+          if (!Payment) {
             return { msg: 'No se encontro el pago', success: false };
           }
-          freezingDay.Payment = res;
+          freezingDay.Payment[0] = Payment;
           
           freezingDay.NumberOfDay = request.NumberOfDay;
           freezingDay.Frozen = request.Frozen;
@@ -66,11 +67,11 @@ export class FreezingDayService {
           if (!freezingDay) {
             return { msg: 'No se encontro el congelamiento', success: false };
           }
-          var res = await this.paymentRepository.findOne({ where: { PaymentId: request.idPayment } })
+          var res = await this.paymentRepository.findOne({ where: { PaymentId: request.IdPayment } })
           if (!res) {
             return { msg: 'No se encontro el pago', success: false };
           }
-          freezingDay.Payment = res;
+          freezingDay.Payment[0] = res;
 
           freezingDay.NumberOfDay = request.NumberOfDay;
           freezingDay.Frozen = request.Frozen;

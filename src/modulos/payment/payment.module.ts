@@ -10,9 +10,10 @@ import { VaucherService } from '../vaucher/vaucher.service';
 import { VaucherEntity } from 'src/entity/voucher.entity';
 import { CartEntity } from 'src/entity/Carrito.entity';
 import { ProductEntity } from 'src/entity/product.entity';
+import { FreezingDayEntity } from 'src/entity/freezingDay.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CartEntity]),TypeOrmModule.forFeature([ProductEntity]),
+  imports: [TypeOrmModule.forFeature([CartEntity]),TypeOrmModule.forFeature([FreezingDayEntity]),TypeOrmModule.forFeature([ProductEntity]),
     TypeOrmModule.forFeature([UserEntity]),TypeOrmModule.forFeature([VaucherEntity]),TypeOrmModule.forFeature([MembershipEntity]),TypeOrmModule.forFeature([ClientEntity]),TypeOrmModule.forFeature([PaymentEntity])],
   controllers: [PaymentController],
   providers: [PaymentService,VaucherService]

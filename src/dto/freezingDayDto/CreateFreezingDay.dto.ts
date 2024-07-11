@@ -1,6 +1,6 @@
 export class CreateFreezingDayDto{
 
-    idPayment:number;
+    IdPayment:number;
 
     NumberOfDay:number;
 
