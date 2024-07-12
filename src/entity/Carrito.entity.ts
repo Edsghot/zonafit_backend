@@ -12,4 +12,8 @@ export class CartEntity {
   @ManyToMany(() => ProductEntity, product => product.Carts)
   @JoinTable()
   products: ProductEntity[];
+
+  @Column()
+  IdUser: number;
+
 }

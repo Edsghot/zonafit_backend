@@ -164,7 +164,7 @@ export class PaymentService {
   async findAllByUserCode(search: string) {
     let searchCondition: any = {};
 
-    if (!isNaN(Number(search))) {
+    if (search.length < 5) {
       searchCondition = { Code: Number(search) };
     } else if (/^\d+$/.test(search)) {
       searchCondition = { PhoneNumber: search };
@@ -220,6 +220,7 @@ export class PaymentService {
     const newCart = new CartEntity();
     newCart.price = Price;
     newCart.products = productEntities;
+    newCart.IdUser = cartDto.IdUser;
 
     var data = await this.cartRepository.save(newCart);
     return {msg: `Se inserto correctamente`,success: true, data: data}
