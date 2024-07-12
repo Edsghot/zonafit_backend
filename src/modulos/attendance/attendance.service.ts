@@ -34,6 +34,12 @@ export class AttendanceService {
           attendance.User = user;
           
           attendance.AttendanceDate=new Date();
+
+          var attendace = await this.attendanceRepository.findOne({where:{Client: client}});
+
+          if(attendace.AttendanceDate == new Date()) {
+              
+          }
           await this.attendanceRepository.save(attendance);
           return { msg: 'se inserto correctamente', success: true };
         } catch (e) {
@@ -82,7 +88,9 @@ export class AttendanceService {
 
       async findAllByCode(code:number) {
         try {
-          const attendance = await this.clientRepository.find({where:{Code: code}})
+          const client = await this.clientRepository.findOne({where:{Code: code}})
+
+          const attendance = await this.attendanceRepository.find({where:{Client: client}});
       
           if (!attendance || attendance.length == 0) {
             return {msg:"Asistencias con codigo "+code+" no se encontro", success: false};
