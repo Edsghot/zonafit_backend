@@ -88,19 +88,13 @@ export class PaymentService {
     }
 
     // Buscar el último pago del cliente
-    const lastPayment = await this.paymentRepository.findOne({
-      where: {
-        Client: client,
-        Due: MoreThan(0) // Utiliza el helper MoreThan para indicar que Due debe ser mayor a 0
-      },
-      order: { DatePayment: 'DESC' }
-    });
+    var lastPayment = await this.paymentRepository.query("SELECT * FROM Payment WHERE clientIdClient = "+client.IdClient+" AND Due > 0");
 
-    if (!lastPayment) {
+    if (!lastPayment[0]) {
         return {msg: "no se encontro el payment", success: false}
     }
 
-    if(lastPayment.Due == 0){
+    if(lastPayment[0].Due == 0){
       return {msg: "No tiene deuda", success: false}
     }
 
@@ -109,7 +103,7 @@ export class PaymentService {
    if(!res.success){
     return {msg:res.msg,success:false}
    }
-    await this.paymentRepository.save(lastPayment);
+    await this.paymentRepository.save(lastPayment[0]);
 
     return {msg:'Deuda pagada',success:true};
   }
