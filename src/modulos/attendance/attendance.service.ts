@@ -44,7 +44,8 @@ export class AttendanceService {
           var attendace = await this.attendanceRepository.findOne({where:{Client: client}});
 
           const today = new Date();
-      if (!this.isSameDay(attendace.AttendanceDate, today)) {
+          
+      if (attendace && this.isSameDay(attendace.AttendanceDate, today)) {
       return { msg: 'ya se registro la asistencia el dia de hoy', success: false };
     }
 
@@ -67,6 +68,13 @@ export class AttendanceService {
             data: null,
           };
         }
+      }
+
+      createDateWithoutTime(date: Date): Date {
+        const year = date.getFullYear();
+        const month = date.getMonth(); // Recuerda que los meses son indexados desde 0 (Enero es 0, Febrero es 1, etc.)
+        const day = date.getDate();
+        return new Date(year, month, day);
       }
 
       async  getAllAttendancesOfClient(searchTerm: string){
