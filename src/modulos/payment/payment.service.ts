@@ -63,7 +63,12 @@ export class PaymentService {
       payment.Observation = request.Observation;
       payment.DateRegister = new Date();
 
-      this.createVoucher(request.idClient,request.Total,"Pago de una membresia");
+      var vaucher = await this.createVoucher(request.idClient,request.Total,"Pago de una membresia",user.IdUser,request.PaymentType);
+      
+      if(!vaucher.success){
+        return {msg: vaucher.msg,success:false}
+      }
+     
       await this.paymentRepository.save(payment);
 
 
@@ -99,14 +104,17 @@ export class PaymentService {
       return {msg: "No tiene deuda", success: false}
     }
 
-   this.createVoucher(request.IdClient,request.Amount,"pago de una deuda")
+   var res = await this.createVoucher(request.IdClient,request.Amount,"pago de una deuda",request.IdUser,request.TypePayment);
 
+   if(!res.success){
+    return {msg:res.msg,success:false}
+   }
     await this.paymentRepository.save(lastPayment);
 
     return {msg:'Deuda pagada',success:true};
   }
 
-  async createVoucher(idClient: number,Amount: number,description: string){
+  async createVoucher(idClient: number,Amount: number,description: string,idUser:number,typePayment:string){
         
     var Cod;
     const vau = await this.vaucherRepository.find({
@@ -126,6 +134,12 @@ export class PaymentService {
   newVoucher.DateRegister = new Date();
   newVoucher.IdClient = idClient;
   newVoucher.Description = description;
+  var user = await this.userRepository.findOne({where: {IdUser: idUser}});
+  if(!user){
+    return {msg: "User not found", success: false}
+  }
+  newVoucher.IdUser = idUser;
+  newVoucher.TypePayment = typePayment;
 
   // Crear y guardar el nuevo voucher
   const voucher = this.vaucherRepository.create(newVoucher);
@@ -228,6 +242,12 @@ export class PaymentService {
     }
     newCart.IdUser = cartDto.IdUser;
     newCart.CreateAt = new Date();
+
+    var vaucher = await this.createVoucher(99,cartDto.Price,"Compra de productos",cartDto.IdUser,cartDto.TypePayment);
+      
+      if(!vaucher.success){
+        return {msg: vaucher.msg,success:false}
+      }
 
     var data = await this.cartRepository.save(newCart);
     return {msg: `Se inserto correctamente`,success: true, data: data}

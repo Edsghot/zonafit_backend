@@ -20,4 +20,10 @@ export class VaucherEntity {
 
   @Column()
   DateRegister: Date;
+
+  @Column()
+  TypePayment: string;
+
+  @Column()
+  IdUser: number;
 }
