@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateClientDto } from 'src/dto/clientDto/CreateClientDto.dto';
+import { DateRangeDto } from 'src/dto/clientDto/DateRangeDto.dto';
 import { ClientEntity } from 'src/entity/client.entity';
 import { Repository } from 'typeorm';
 
@@ -146,4 +147,23 @@ async updateClient(id: number, request: CreateClientDto) {
     }
 }
 
+async getClientByDateRange(request:DateRangeDto ){
+    try{
+        const data = await this.clientRepository.query(
+            `CALL getClientByDateRange('${request.StartDate}', '${request.EndDate}')`,
+          );
+          return {
+            msg: 'Lista de clientes completa',
+            data: data[0],
+            success: true,
+          };
+    }catch(error){
+        console.error('Error al recuperar todos los clientes:', error);
+        return {
+            msg: 'Error al recuperar todos los clientes',
+            detailMsg: error.message,
+            success: false,
+      };
+    }
+}
 }

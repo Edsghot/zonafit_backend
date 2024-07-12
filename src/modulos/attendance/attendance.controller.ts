@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { AttendanceService } from './attendance.service';
 import { CreateAttendanceDto } from 'src/dto/Attendance/CreateAttendance.dto';
+import { DateRangeDto } from 'src/dto/clientDto/DateRangeDto.dto';
 
 @Controller('/api/attendance')
 export class AttendanceController {
@@ -45,6 +46,11 @@ export class AttendanceController {
     @Delete('/delete/:id')
     async remove(@Param('id') id: number) {
       return await this.serviceAttendance.deleteAttendance(id);
+    }
+
+    @Get("/getAttendanceByDateRange")
+    async getAttendanceByDateRange(@Body() request: DateRangeDto) {
+      return await this.serviceAttendance.getAttendanceByDateRange(request);
     }
 
 }

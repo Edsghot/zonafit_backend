@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAttendanceDto } from 'src/dto/Attendance/CreateAttendance.dto';
+import { DateRangeDto } from 'src/dto/clientDto/DateRangeDto.dto';
 import { AttendanceEntity } from 'src/entity/attendance.entity';
 import { ClientEntity } from 'src/entity/client.entity';
 import { UserEntity } from 'src/entity/user.entity';
@@ -166,5 +167,25 @@ export class AttendanceService {
           console.error('Fallo al eliminar el asistencia:', error);
           return { msg: 'Fallo al eliminar el asistencia', detailMsg: error.message, success: false };
         }
+      }
+
+      async getAttendanceByDateRange(request:DateRangeDto){
+        try{
+          const data = await this.attendanceRepository.query(
+              `CALL getAttendanceByDateRange('${request.StartDate}', '${request.EndDate}')`,
+            );
+            return {
+              msg: 'Lista de asistencias completa',
+              data: data[0],
+              success: true,
+            };
+      }catch(error){
+          console.error('Error al recuperar todas las asistencias:', error);
+          return {
+              msg: 'Error al recuperar todas las asistencias',
+              detailMsg: error.message,
+              success: false,
+        };
+      }
       }
 }
