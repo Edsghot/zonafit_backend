@@ -44,7 +44,7 @@ export class AttendanceService {
           var attendace = await this.attendanceRepository.findOne({where:{Client: client}});
 
           const today = new Date();
-      if (this.isSameDay(attendace.AttendanceDate, today)) {
+      if (!this.isSameDay(attendace.AttendanceDate, today)) {
       return { msg: 'ya se registro la asistencia el dia de hoy', success: false };
     }
 
