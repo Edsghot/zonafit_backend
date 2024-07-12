@@ -98,6 +98,9 @@ export class AttendanceService {
         try {
           const client = await this.clientRepository.findOne({where:{Code: code}})
 
+          if(!client){
+            return {msg:"Cliente no encontrado",success: false}
+          }
           const attendance = await this.attendanceRepository.find({where:{Client: client}});
       
           if (!attendance || attendance.length == 0) {
