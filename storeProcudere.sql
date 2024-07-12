@@ -11,3 +11,14 @@ END//
 
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE getAttendanceByDateRange(IN Inicio DATE, IN Fin DATE)
+BEGIN
+    SELECT c.Code,c.FirstName,c.LastName,DATE(a.AttendanceDate) AS 'Fecha', HOUR(a.AttendanceDate) AS 'Hora', DAYNAME(a.AttendanceDate) AS 'Dia',u.UserName
+    FROM Attendance a
+    INNER JOIN Client c on a.IdClient=c.IdClient
+    INNER JOIN User u on a.IdUser=u.IdUser
+    WHERE a.AttendanceDate >= Inicio AND a.AttendanceDate <= Fin;
+END//
+
+DELIMITER ;
