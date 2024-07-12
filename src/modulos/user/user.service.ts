@@ -118,10 +118,12 @@ async login(username: string, password: string) {
         const user = await this.userRepository.findOne({ where: { UserName: username, Password: password } });
 
         
-        if (!user || user.Password !== password || !user.Access || user.UserName !== username) {
+        if (!user || user.Password !== password || user.UserName !== username) {
             return { data: null, msg: 'Invalid username or password', success: false };
         }
-
+        if (!user.Access) {
+            return { data: null, msg: 'Usted no tiene acceso al sistema', success: false };
+        }
         return { data: user, msg: 'Success', success: true };
     } catch (error) {
         console.error('Login failed:', error);
