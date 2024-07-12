@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { VaucherService } from './vaucher.service';
 
 @Controller('api/vaucher')
@@ -8,5 +8,10 @@ export class VoucherController {
   @Get()
   async getAllVouchers() {
     return this.voucherService.findAll();
+  }
+
+  @Get('/getCode/:code')
+  async getAllCode(@Param('code') code: number) {
+    return this.voucherService.findAllCode(code);
   }
 }

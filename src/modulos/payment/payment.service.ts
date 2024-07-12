@@ -7,12 +7,13 @@ import { PaymentEntity } from 'src/entity/Payment.entity';
 import { ClientEntity } from 'src/entity/client.entity';
 import { MembershipEntity } from 'src/entity/membership.entity';
 import { UserEntity } from 'src/entity/user.entity';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { VaucherService } from '../vaucher/vaucher.service';
 import { CartEntity } from 'src/entity/Carrito.entity';
 import { CreateCartDto } from 'src/dto/Cart/CreateCart.dto';
 import { ProductEntity } from 'src/entity/product.entity';
 import { FreezingDayEntity } from 'src/entity/freezingDay.entity';
+import { VaucherEntity } from 'src/entity/voucher.entity';
 
 @Injectable()
 export class PaymentService {
@@ -29,7 +30,9 @@ export class PaymentService {
     @InjectRepository(CartEntity)
     private readonly cartRepository: Repository<CartEntity>,
     @InjectRepository(PaymentEntity)
-    private readonly paymentRepository: Repository<PaymentEntity>, private vaucherService: VaucherService) { }
+    private readonly paymentRepository: Repository<PaymentEntity>, 
+    @InjectRepository(VaucherEntity)
+    private readonly vaucherRepository: Repository<VaucherEntity>,) { }
 
   async createPayment(request: CreatePaymentDto) {
     try {
@@ -59,7 +62,11 @@ export class PaymentService {
       payment.PaymentReceipt = request.PaymentReceipt;
       payment.Observation = request.Observation;
       payment.DateRegister = new Date();
+
+      this.createVoucher(request.idClient,request.Total,"Pago de una membresia");
       await this.paymentRepository.save(payment);
+
+
 
       return { msg: 'se inserto correctamente', success: true };
     } catch (e) {
@@ -70,14 +77,17 @@ export class PaymentService {
   async RepairPayment(request: RepairPaymentDto){
     const { IdClient } = request;
 
-    const client = await this.clientRepository.find({where: {IdClient: IdClient}});
+    const client = await this.clientRepository.findOne({where: {IdClient: IdClient}});
     if (!client) {
       return { msg: 'No se encontro el cliente', success: false };
     }
 
     // Buscar el último pago del cliente
     const lastPayment = await this.paymentRepository.findOne({
-      where: { Client: client },
+      where: {
+        Client: client,
+        Due: MoreThan(0) // Utiliza el helper MoreThan para indicar que Due debe ser mayor a 0
+      },
       order: { DatePayment: 'DESC' }
     });
 
@@ -89,24 +99,39 @@ export class PaymentService {
       return {msg: "No tiene deuda", success: false}
     }
 
-    lastPayment.Due = lastPayment.Due - request.Amount;
-    lastPayment.Total = lastPayment.Total + request.Amount;
-  
+   this.createVoucher(request.IdClient,request.Amount,"pago de una deuda")
+
     await this.paymentRepository.save(lastPayment);
 
+    return {msg:'Deuda pagada',success:true};
+  }
 
-    var vaucher = new CreateVaucherDto();
-      vaucher.IdClient = request.IdClient;
-      vaucher.Description = "Pagando la deuda de "+request.Amount;
-      vaucher.Amount = request.Amount;
+  async createVoucher(idClient: number,Amount: number,description: string){
+        
+    var Cod;
+    const vau = await this.vaucherRepository.find({
+      order: { Code: 'DESC' },
+    });
 
-     var resVaucher = await this.vaucherService.createVoucher(vaucher);
+    if(vau.length == 0){
+      Cod = 3000;
+    }else{
+      
+    Cod = vau[0].Code;
+    }
+    
+    const newVoucher = new VaucherEntity();
+  newVoucher.Amount = Amount;
+  newVoucher.Code = Cod;
+  newVoucher.DateRegister = new Date();
+  newVoucher.IdClient = idClient;
+  newVoucher.Description = description;
 
-     if(!resVaucher.success){
-      return {msg:"Error al registrar el vaucher", success: false};
-     }
+  // Crear y guardar el nuevo voucher
+  const voucher = this.vaucherRepository.create(newVoucher);
+  await this.vaucherRepository.save(voucher);
 
-    return {msg:'Exitoso',success:true};
+  return { msg: "ok", success: true };
   }
 
   async findAllPayments() {
@@ -136,80 +161,33 @@ export class PaymentService {
     }
   }
 
- 
-  async findAllByUserCode(userCode: number) {
-    const user = await this.userRepository.findOne({ where: { Code: userCode } });
-    if (!user) {
-      return {
-        msg: 'No se encontró el usuario',
-        success: false,
-        data: null,
-      };
+  async findAllByUserCode(search: string) {
+    let searchCondition: any = {};
+
+    if (!isNaN(Number(search))) {
+      searchCondition = { Code: Number(search) };
+    } else if (/^\d+$/.test(search)) {
+      searchCondition = { PhoneNumber: search };
+    } else {
+      searchCondition = { FirstName: search };
     }
 
-    const payments = await this.paymentRepository.find({
-      where: { User: user },
-      relations: ['Client', 'Membership', 'FreezingDay'],
+    const client = await this.clientRepository.findOne({
+      where: searchCondition,
+      relations: ['Payment', 'Payment.User', 'Payment.Membership', 'Payment.FreezingDay'],
     });
-    const client = await this.clientRepository.findOne({ where: { Payment: payments } });
-    const membership = await this.membershipRepository.findOne({ where: { Payment: payments } });
-    const freezingDay = await this.freezingRepository.findOne({ where: { Payment: payments } });
 
-    const formattedPayments = await Promise.all(payments.map(async (payment) => {
-
+    if (!client) {
       return {
-        PaymentId: payment.PaymentId,
-        StartDate: payment.StartDate,
-        EndDate: payment.EndDate,
-        Total: payment.Total,
-        Discount: payment.Discount,
-        PriceDiscount: payment.PriceDiscount,
-        QuantityDays: payment.QuantityDays,
-        DatePayment: payment.DatePayment,
-        Due: payment.Due,
-        PrePaid: payment.PrePaid,
-        PaymentType: payment.PaymentType,
-        PaymentReceipt: payment.PaymentReceipt,
-        Observation: payment.Observation,
-        DateRegister: payment.DateRegister,
-        Client: client ? {
-          IdClient: client.IdClient,
-          Code: client.Code,
-          FirstName: client.FirstName,
-          LastName: client.LastName,
-          PhoneNumber: client.PhoneNumber,
-          Document: client.Document,
-          DocumentType: client.DocumentType,
-          MaritalStatus: client.MaritalStatus,
-          Gender: client.Gender,
-          Address: client.Address,
-          Whatsapp: client.Whatsapp,
-          Mail: client.Mail,
-          BirthDate: client.BirthDate,
-          Note: client.Note,
-          Image: client.Image,
-          Created: client.Created,
-        } : null,
-        Membership: membership ? {
-          IdMembership: membership.IdMembership,
-          Name: membership.Name,
-          // otros campos de Membership si es necesario
-        } : null,
-        FreezingDay: freezingDay ? {
-          IdFreezingDay: freezingDay.IdFreezingDay,
-          Date: freezingDay.FrozenDate,
-          // otros campos de FreezingDay si es necesario
-        } : null,
+        msg: 'No se encontro el cliente',
+        success: false,
       };
-    }));
+    }
 
     return {
       msg: 'Lista de pagos',
       success: true,
-      data: formattedPayments,
-      dataClient: client,
-      dataMembership: membership,
-
+      data: client,
     };
   }
   

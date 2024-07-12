@@ -32,9 +32,9 @@ export class PaymentController {
       return await this.servicePayment.findPaymentById(id);
     }
 
-    @Get('/user/:code')
-    async getPaymentsByUserCode(@Param('code') code: number) {
-      return this.servicePayment.findAllByUserCode(code);
+    @Get('/client/:search')
+    async getPaymentsByUserCode(@Param('search') search: string) {
+      return this.servicePayment.findAllByUserCode(search);
     }
 
     @Put('/update/:id')

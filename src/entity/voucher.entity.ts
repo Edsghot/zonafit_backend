@@ -10,7 +10,7 @@ export class VaucherEntity {
   IdClient: number;
 
   @Column()
-  Code: string;
+  Code: number;
 
   @Column('float')
   Amount: number;

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateVaucherDto } from 'src/dto/Vaucher/CreateVaucher.dto';
+import { ClientEntity } from 'src/entity/client.entity';
 import { VaucherEntity } from 'src/entity/voucher.entity';
 import { Repository } from 'typeorm';
 
@@ -9,32 +10,24 @@ export class VaucherService {
     constructor(
         @InjectRepository(VaucherEntity)
         private readonly voucherRepository: Repository<VaucherEntity>,
+        @InjectRepository(ClientEntity)
+        private readonly clientRepository: Repository<ClientEntity>
       ) {}
     
-      async createVoucher(req: CreateVaucherDto) {
-        
-        var Cod;
-        var vau = await this.voucherRepository.findOne({order:{DateRegister: 'DESC'}});
-
-        Cod = vau.Code;
-        if(!vau){
-          Cod = 3000;
-        }
-        
-        var res = new VaucherEntity();
-        res.Amount = req.Amount;
-        res.Code = Cod;
-        res.DateRegister = new Date();
-        res.IdClient = req.IdClient;
-        res.Description = req.Description;
-        const voucher = this.voucherRepository.create(res);
-         await this.voucherRepository.save(voucher);
-        return {msg:"ok",success: true}
-      }
+      
 
       async findAll() {
-        var res =  this.voucherRepository.find();
-        return {msg:"ok",success: true,data: res}
+        const vouchers = await this.voucherRepository.find();
+        return { msg: "ok", success: true, data: vouchers };
       }
 
+      async findAllCode(code: number) {
+
+        var client = await this.clientRepository.findOne({where:{Code: code}});
+        if(!client){
+          return { msg: "No se encontro el cliente", success: false };    
+        }
+        const vouchers = await this.voucherRepository.find({where: {IdClient: client.IdClient}});
+        return { msg: "Lista de vaucher del cliente "+client.FirstName, success: true,data: vouchers };
+      }
 }
