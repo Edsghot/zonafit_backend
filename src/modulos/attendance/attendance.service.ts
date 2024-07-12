@@ -16,6 +16,12 @@ export class AttendanceService {
     @InjectRepository(UserEntity)
     private readonly userRepository:Repository<UserEntity>) { }
 
+    private isSameDay(date1: Date, date2: Date): boolean {
+      return date1.getFullYear() === date2.getFullYear() &&
+             date1.getMonth() === date2.getMonth() &&
+             date1.getDate() === date2.getDate();
+    }
+
     async createAttendance(request: CreateAttendanceDto) {
         try {
           var attendance = new AttendanceEntity();
@@ -37,9 +43,11 @@ export class AttendanceService {
 
           var attendace = await this.attendanceRepository.findOne({where:{Client: client}});
 
-          if(attendace.AttendanceDate == new Date()) {
-              
-          }
+          const today = new Date();
+      if (this.isSameDay(attendace.AttendanceDate, today)) {
+      return { msg: 'ya se registro la asistencia el dia de hoy', success: false };
+    }
+
           await this.attendanceRepository.save(attendance);
           return { msg: 'se inserto correctamente', success: true };
         } catch (e) {
