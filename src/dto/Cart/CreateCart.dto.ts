@@ -3,4 +3,5 @@ export class CreateCartDto{
     Products: [];
     Stocks: [];
     IdUser: number;
+    TypePayment: string;
 }

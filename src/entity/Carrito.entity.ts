@@ -18,4 +18,7 @@ export class CartEntity {
 
   @Column()
   CreateAt: Date;
+
+  @Column()
+  TypePayment:string; 
 }

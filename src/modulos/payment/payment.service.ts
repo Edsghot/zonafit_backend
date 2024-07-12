@@ -220,6 +220,7 @@ export class PaymentService {
     const newCart = new CartEntity();
     newCart.price = Price;
     newCart.products = productEntities;
+    newCart.TypePayment = cartDto.TypePayment;
 
     var us = await this.userRepository.findOne({where:{IdUser: cartDto.IdUser}});
     if(!us){
