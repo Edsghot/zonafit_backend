@@ -10,4 +10,5 @@ export class UpdateUserDto {
     readonly Mail: string;
     readonly BirthDate: Date;
     readonly Image: string;
+    readonly Access: boolean;
   }

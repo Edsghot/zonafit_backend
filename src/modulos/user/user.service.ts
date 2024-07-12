@@ -68,6 +68,7 @@ export class UserService {
       userToUpdate.Mail = request.Mail;
       userToUpdate.BirthDate = request.BirthDate;
       userToUpdate.Image = request.Image;
+      userToUpdate.Access = request.Access;
 
       // Guardar los cambios en la base de datos
       await this.userRepository.save(userToUpdate);
