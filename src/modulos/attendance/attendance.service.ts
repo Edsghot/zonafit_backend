@@ -114,7 +114,10 @@ export class AttendanceService {
           if (!attendance || attendance.length == 0) {
             return {msg:"Asistencias con codigo "+code+" no se encontro", success: false};
           }
-          return { msg: 'Asistencias encontradas', success: true, data: attendance,dataClient: client };
+
+          const user = await this.userRepository.findOne({where:{Attendance: attendance[0]}})
+
+          return { msg: 'Asistencias encontradas', success: true, data: attendance,dataClient: client,dataUser: user };
         } catch (error) {
           console.error('Fallo al obtener el asistencias por codigo:', error);
           return { msg: 'Fallo al obtener el asistencias por codigo', detailMsg: error.message, success: false };
