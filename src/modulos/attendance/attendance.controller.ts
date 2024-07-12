@@ -24,7 +24,7 @@ export class AttendanceController {
     }
 
     @Get('/allByCode/:Code')
-    async findAllByCode(@Param('Code') Code:string){
+    async findAllByCode(@Param('Code') Code:number){
         return await this.serviceAttendance.findAllByCode(Code);
     }
 

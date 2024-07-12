@@ -80,12 +80,12 @@ export class AttendanceService {
         return { msg:"Asistencias encontradas", success: true, data: attendances };
     }
 
-      async findAllByCode(code:string) {
+      async findAllByCode(code:number) {
         try {
-          const attendance = await this.attendanceRepository.query("SELECT * FROM Attendance INNER join Client on Attendance.IdClient = Client.IdClient INNER join User on Attendance.IdUser = User.IdUser where Client.Code = "+code);
+          const attendance = await this.clientRepository.find({where:{Code: code}})
       
-          if (!attendance) {
-            return {msg:"Asistencias con codigo "+code+" no se encontro"};
+          if (!attendance || attendance.length == 0) {
+            return {msg:"Asistencias con codigo "+code+" no se encontro", success: false};
           }
           return { msg: 'Asistencias encontradas', success: true, data: attendance };
         } catch (error) {
