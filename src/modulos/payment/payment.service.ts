@@ -203,12 +203,12 @@ export class PaymentService {
       const product = await this.productRepository.findOne({where:{IdProduct:productId}});
 
       if (!product) {
-        return {msg: `Product with ID ${productId} not found`,success: false}
+        return {msg: `El producto con este id: ${productId} no existe`,success: false}
       }
 
       if (product.Stock < stockToDeduct) {
         
-        return {msg: `Not enough stock for product with ID ${productId}`,success: false}
+        return {msg: `El producto no tiene esa cantidad de stock ${productId}`,success: false}
       }
 
       product.Stock -= stockToDeduct;
@@ -220,7 +220,13 @@ export class PaymentService {
     const newCart = new CartEntity();
     newCart.price = Price;
     newCart.products = productEntities;
+
+    var us = await this.userRepository.findOne({where:{IdUser: cartDto.IdUser}});
+    if(!us){
+      return {msg:" no se encontro el usuario ", sucess: false}
+    }
     newCart.IdUser = cartDto.IdUser;
+    newCart.CreateAt = new Date();
 
     var data = await this.cartRepository.save(newCart);
     return {msg: `Se inserto correctamente`,success: true, data: data}

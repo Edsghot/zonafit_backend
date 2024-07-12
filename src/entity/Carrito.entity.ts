@@ -16,4 +16,6 @@ export class CartEntity {
   @Column()
   IdUser: number;
 
+  @Column()
+  CreateAt: Date;
 }
