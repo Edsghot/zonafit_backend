@@ -103,7 +103,7 @@ export class AttendanceService {
           if (!attendance || attendance.length == 0) {
             return {msg:"Asistencias con codigo "+code+" no se encontro", success: false};
           }
-          return { msg: 'Asistencias encontradas', success: true, data: attendance };
+          return { msg: 'Asistencias encontradas', success: true, data: attendance,dataClient: client };
         } catch (error) {
           console.error('Fallo al obtener el asistencias por codigo:', error);
           return { msg: 'Fallo al obtener el asistencias por codigo', detailMsg: error.message, success: false };
