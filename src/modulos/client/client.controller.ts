@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { CreateClientDto } from 'src/dto/clientDto/CreateClientDto.dto';
+import { DateRangeDto } from 'src/dto/clientDto/DateRangeDto.dto';
 
 @Controller('api/client')
 export class ClientController {
@@ -42,5 +43,10 @@ export class ClientController {
     @Put(':id')
     async update(@Param('id') id: number, @Body() updateClientDto: CreateClientDto) {
         return await this.clientService.updateClient(id, updateClientDto);
+    }
+
+    @Get("/getClientByDateRange")
+    async getClientByDateRange(@Body() request: DateRangeDto) {
+      return await this.clientService.getClientByDateRange(request);
     }
 }
