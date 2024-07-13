@@ -123,14 +123,14 @@ export class PaymentService {
     }
     
     const newVoucher = new VaucherEntity();
-  newVoucher.Amount = Amount;
-  newVoucher.Code = Cod;
-  newVoucher.DateRegister = new Date();
-  newVoucher.IdClient = idClient;
-  newVoucher.Description = description;
-  var user = await this.userRepository.findOne({where: {IdUser: idUser}});
-  if(!user){
-    return {msg: "User not found", success: false}
+      newVoucher.Amount = Amount;
+      newVoucher.Code = Cod;
+      newVoucher.DateRegister = new Date();
+      newVoucher.IdClient = idClient;
+      newVoucher.Description = description;
+    var user = await this.userRepository.findOne({where: {IdUser: idUser}});
+    if(!user){
+      return {msg: "User not found", success: false}
   }
   newVoucher.IdUser = idUser;
   newVoucher.TypePayment = typePayment;
@@ -172,12 +172,12 @@ export class PaymentService {
   async findAllByUserCode(search: string) {
     let searchCondition: any = {};
 
-    if (search.length < 5) {
+    if (/^\d{4}$/.test(search)) {
       searchCondition = { Code: Number(search) };
     } else if (/^\d+$/.test(search)) {
       searchCondition = { PhoneNumber: search };
     } else {
-      searchCondition = { FirstName: search };
+      searchCondition = [{ FirstName: search },{ LastName: search }];
     }
 
     const client = await this.clientRepository.findOne({
