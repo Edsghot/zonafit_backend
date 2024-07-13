@@ -4,6 +4,7 @@ import { CreateFreezingDayDto } from 'src/dto/freezingDayDto/CreateFreezingDay.d
 import { PaymentEntity } from 'src/entity/Payment.entity';
 import { FreezingDayEntity } from 'src/entity/freezingDay.entity';
 import { Repository } from 'typeorm';
+import * as moment from 'moment-timezone';
 
 @Injectable()
 export class FreezingDayService {
@@ -25,7 +26,7 @@ export class FreezingDayService {
           freezingDay.NumberOfDay = request.NumberOfDay;
           freezingDay.Frozen = request.Frozen;
           freezingDay.FrozenDate = request.FrozenDate;
-          freezingDay.DateRegister=new Date();
+          freezingDay.DateRegister= moment.tz('America/Lima').toDate();
           await this.freezingDayRepository.save(freezingDay);
           return { msg: 'se inserto correctamente', success: true };
         } catch (e) {

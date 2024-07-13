@@ -27,7 +27,7 @@ export class ClientController {
 
     @Get('/countByDate')
     async getClientCountByDate() {
-      return await this.clientService.getClientCountByDate();
+      return await this.clientService.getClientCountByMonth();
     }
 
     @Get('/getById/:id')

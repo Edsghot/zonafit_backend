@@ -6,6 +6,7 @@ import { AttendanceEntity } from 'src/entity/attendance.entity';
 import { ClientEntity } from 'src/entity/client.entity';
 import { UserEntity } from 'src/entity/user.entity';
 import { Repository } from 'typeorm';
+import * as moment from 'moment-timezone';
 
 @Injectable()
 export class AttendanceService {
@@ -39,11 +40,11 @@ export class AttendanceService {
           }
           attendance.User = user;
           
-          attendance.AttendanceDate=new Date();
+          attendance.AttendanceDate= moment.tz('America/Lima').toDate();
 
           var attendace = await this.attendanceRepository.findOne({where:{Client: client}});
 
-          const today = new Date();
+          const today = moment.tz('America/Lima').toDate();
           
       if (attendace && this.isSameDay(attendace.AttendanceDate, today)) {
       return { msg: 'ya se registro la asistencia el dia de hoy', success: false };

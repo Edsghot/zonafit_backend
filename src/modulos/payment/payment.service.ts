@@ -14,6 +14,7 @@ import { CreateCartDto } from 'src/dto/Cart/CreateCart.dto';
 import { ProductEntity } from 'src/entity/product.entity';
 import { FreezingDayEntity } from 'src/entity/freezingDay.entity';
 import { VaucherEntity } from 'src/entity/voucher.entity';
+import * as moment from 'moment-timezone';
 
 @Injectable()
 export class PaymentService {
@@ -61,7 +62,7 @@ export class PaymentService {
       payment.PaymentType = request.PaymentType;
       payment.PaymentReceipt = request.PaymentReceipt;
       payment.Observation = request.Observation;
-      payment.DateRegister = new Date();
+      payment.DateRegister = moment.tz('America/Lima').toDate();;
 
       var vaucher = await this.createVoucher(request.idClient,request.Total,"Pago de una membresia",user.IdUser,request.PaymentType);
       
@@ -125,7 +126,7 @@ export class PaymentService {
     const newVoucher = new VaucherEntity();
       newVoucher.Amount = Amount;
       newVoucher.Code = Cod;
-      newVoucher.DateRegister = new Date();
+      newVoucher.DateRegister = moment.tz('America/Lima').toDate();;
       newVoucher.IdClient = idClient;
       newVoucher.Description = description;
     var user = await this.userRepository.findOne({where: {IdUser: idUser}});
@@ -256,7 +257,7 @@ export class PaymentService {
       return {msg:" no se encontro el usuario ", sucess: false}
     }
     newCart.IdUser = cartDto.IdUser;
-    newCart.CreateAt = new Date();
+    newCart.CreateAt = moment.tz('America/Lima').toDate();;
 
     var vaucher = await this.createVoucher(99,cartDto.Price,"Compra de productos",cartDto.IdUser,cartDto.TypePayment);
       

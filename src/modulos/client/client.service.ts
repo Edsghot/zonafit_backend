@@ -4,6 +4,7 @@ import { CreateClientDto } from 'src/dto/clientDto/CreateClientDto.dto';
 import { DateRangeDto } from 'src/dto/clientDto/DateRangeDto.dto';
 import { ClientEntity } from 'src/entity/client.entity';
 import { Repository } from 'typeorm';
+import * as moment from 'moment-timezone';
 
 @Injectable()
 export class ClientService {
@@ -39,7 +40,7 @@ export class ClientService {
         newClient.BirthDate = request.BirthDate;
         newClient.Note = request.Note;
         newClient.Image = request.Image;
-        newClient.Created = new Date();
+        newClient.Created = moment.tz('America/Lima').toDate();;
 
         // Guardar la nueva entidad de cliente en la base de datos
         await this.clientRepository.save(newClient);
