@@ -26,10 +26,7 @@ export class AttendanceService {
     async createAttendance(request: CreateAttendanceDto) {
         try {
           var attendance = new AttendanceEntity();
-          const client = await this.clientRepository.createQueryBuilder('client')
-            .where('client.Document = :document', { document: request.Identificador })
-            .orWhere('client.Code = :code', { code: request.Identificador })
-            .getOne();
+          const client = await this.clientRepository.findOne({where:{Code: request.Identificador}})
           if (!client) {
             return { msg: 'No se encontro el cliente', success: false };
           }
@@ -80,24 +77,27 @@ export class AttendanceService {
 
       async  getAllAttendancesOfClient(searchTerm: string){
     
-        const client = await this.clientRepository.findOne({
-            where: [
-                { FirstName: searchTerm },
-                { LastName: searchTerm },
-                { PhoneNumber: searchTerm }
-            ]
-        });
+        let searchCondition: any = {};
+
+    if (/^\d{4}$/.test(searchTerm)) {
+      searchCondition = { Code: Number(searchTerm) };
+    } else if (/^\d+$/.test(searchTerm)) {
+      searchCondition = { PhoneNumber: searchTerm };
+    } else {
+      searchCondition = [{ FirstName: searchTerm },{ LastName: searchTerm }];
+    }
+
+    const client = await this.clientRepository.findOne({
+      where: searchCondition
+    });
     
         if (!client) {
-            return { msg:`Cliente con término de búsqueda "${searchTerm}" no encontrado.`, success: true, data: null };
+            return { msg:`Cliente con término de búsqueda "${searchTerm}" no encontrado.`, success: false, data: null };
         }
     
         // Obtener todas las asistencias del cliente encontrado
         const attendances = await this.attendanceRepository.find({
-            where: {
-                Client: client
-            },
-            relations: ['Client', 'User']  // Incluir las relaciones para obtener los objetos relacionados completos
+            where: {Client: client}// Incluir las relaciones para obtener los objetos relacionados completos
         });
     
         return { msg:"Asistencias encontradas", success: true, data: attendances };
@@ -110,15 +110,13 @@ export class AttendanceService {
           if(!client){
             return {msg:"Cliente no encontrado",success: false}
           }
-          const attendance = await this.attendanceRepository.find({where:{Client: client}});
+          const attendance = await this.attendanceRepository.query("select * from Attendance INNER join Client on Attendance.IdClient = Client.IdClient INNER join User on Attendance.IdUser = User.IdUser where Client.Code = "+client.Code);
       
           if (!attendance || attendance.length == 0) {
             return {msg:"Asistencias con codigo "+code+" no se encontro", success: false};
           }
-
-          const user = await this.userRepository.findOne({where:{Attendance: attendance[0]}})
-
-          return { msg: 'Asistencias encontradas', success: true, data: attendance,dataClient: client,dataUser: user };
+          
+          return { msg: 'Asistencias encontradas', success: true, data: attendance,dataClient: client};
         } catch (error) {
           console.error('Fallo al obtener el asistencias por codigo:', error);
           return { msg: 'Fallo al obtener el asistencias por codigo', detailMsg: error.message, success: false };

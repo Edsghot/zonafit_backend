@@ -6,8 +6,8 @@ export class FreezingDayEntity{
     @PrimaryGeneratedColumn()
     IdFreezingDay: number;
 
-    @OneToMany(() => PaymentEntity, payment => payment.Membership)
-    Payment: PaymentEntity[];
+    @ManyToOne(() => PaymentEntity, payment => payment.FreezingDay)
+    Payment: PaymentEntity;
 
     @Column()
     NumberOfDay:number;

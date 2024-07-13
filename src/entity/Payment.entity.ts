@@ -18,8 +18,8 @@ export class PaymentEntity {
     @ManyToOne(() => UserEntity, user => user.Payment)
     User: UserEntity;
     
-    @ManyToOne(() => FreezingDayEntity, FreezingDay => FreezingDay.Payment)
-    FreezingDay: FreezingDayEntity;
+    @OneToMany(() => FreezingDayEntity, freezing => freezing.Payment)
+    FreezingDay: FreezingDayEntity[];
 
     @Column()
     StartDate: Date;

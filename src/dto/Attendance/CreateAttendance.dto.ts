@@ -1,6 +1,6 @@
 export class CreateAttendanceDto{
 
-    Identificador:string;
+    Identificador:number;
 
     idUser:number;
 }

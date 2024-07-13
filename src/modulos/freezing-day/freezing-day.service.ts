@@ -14,25 +14,30 @@ export class FreezingDayService {
     private readonly freezingDayRepository:Repository<FreezingDayEntity>) { }
 
     async createFreezingDay(request: CreateFreezingDayDto) {
-        try {
-          var freezingDay = new FreezingDayEntity();
-
-          var Payment = await this.paymentRepository.findOne({where:{PaymentId: request.IdPayment}});
-          if (!Payment) {
-            return { msg: 'No se encontro el pago', success: false };
-          }
-          freezingDay.Payment[0] = Payment;
-          
-          freezingDay.NumberOfDay = request.NumberOfDay;
-          freezingDay.Frozen = request.Frozen;
-          freezingDay.FrozenDate = request.FrozenDate;
-          freezingDay.DateRegister= moment.tz('America/Lima').toDate();
-          await this.freezingDayRepository.save(freezingDay);
-          return { msg: 'se inserto correctamente', success: true };
-        } catch (e) {
-          return { msg: 'error al insertar', sucess: false, detailMsg: e.message };
+      try {
+        // Buscar el pago asociado al IdPayment
+        const payment = await this.paymentRepository.findOne({ where: { PaymentId: request.IdPayment } });
+    
+        if (!payment) {
+          return { msg: 'No se encontró el pago', success: false };
         }
+    
+        // Crear una nueva instancia de FreezingDayEntity
+        const freezingDay = new FreezingDayEntity();
+        freezingDay.Payment = payment;
+        freezingDay.NumberOfDay = request.NumberOfDay;
+        freezingDay.Frozen = request.Frozen;
+        freezingDay.FrozenDate = request.FrozenDate;
+        freezingDay.DateRegister = moment.tz('America/Lima').toDate(); // Fecha actual en Lima
+    
+        // Guardar el objeto FreezingDayEntity en la base de datos
+        await this.freezingDayRepository.save(freezingDay);
+    
+        return { msg: 'Se insertó correctamente', success: true };
+      } catch (e) {
+        return { msg: 'Error al insertar', success: false, detailMsg: e.message };
       }
+    }
 
 
       async findAllFreezingDay() {
