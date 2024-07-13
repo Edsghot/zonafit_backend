@@ -83,6 +83,23 @@ async getAllClients() {
     }
 }
 
+async getClientCountByMonth() {
+    try {
+      const clientCounts = await this.clientRepository
+        .query("SELECT DATE_FORMAT(Created, '%Y-%m') AS month, COUNT(IdClient) AS count FROM Client GROUP BY DATE_FORMAT(Created, '%Y-%m') ORDER BY month ASC;")
+
+      return {
+        msg: "List of client counts by month",
+        success: true,
+        data: clientCounts,
+      };
+    } catch (error) {
+      // Manejo de errores apropiado
+      console.error('Error fetching client counts by month:', error);
+      throw error;
+    }
+  }
+
 async getClientById(id: number) {
     try {
         const client = await this.clientRepository.findOne({ where: { IdClient: id } });

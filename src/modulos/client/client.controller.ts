@@ -25,6 +25,11 @@ export class ClientController {
         return await this.clientService.GetClientDue();
     }
 
+    @Get('/countByDate')
+    async getClientCountByDate() {
+      return await this.clientService.getClientCountByDate();
+    }
+
     @Get('/getById/:id')
     async findOne(@Param('id') id: string) {
         return await this.clientService.getClientById(+id);
