@@ -57,7 +57,7 @@ async GetClientDue(){
         return {msg:"No se encontraron clientes deudores", success: false}
     }
 
-    return {msg:"Lista de deudores", success: true, data: clients[0]}
+    return {msg:"Lista de deudores", success: true, data: clients}
 }
 
 async getClientByCode(code: number){
