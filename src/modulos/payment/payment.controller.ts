@@ -27,6 +27,11 @@ export class PaymentController {
       return await this.servicePayment.findAllPayments();
     }
 
+    @Get('/GetCount')
+    async GetCount(){
+      return await this.servicePayment.GetCount();
+    }
+
     @Get('/getById/:id')
     async findOne(@Param('id') id: number) {
       return await this.servicePayment.findPaymentById(id);

@@ -142,6 +142,27 @@ export class PaymentService {
   return { msg: "ok", success: true };
   }
 
+  async GetCount(){
+    const paymentCount = await this.paymentRepository.count();
+      const totalRevenue = await this.paymentRepository
+        .createQueryBuilder('payment')
+        .select('SUM(payment.Total)', 'sum')
+        .getRawOne();
+      const productCount = await this.productRepository.count();
+      const clientCount = await this.clientRepository.count();
+
+      return {
+        msg: "lista de totales",
+        success: true,
+        data: {
+          paymentCount,
+          totalRevenue: totalRevenue.sum || 0,  // Si no hay pagos, devolver 0
+          productCount,
+          clientCount,
+        }
+      };
+  }
+
   async findAllPayments() {
     try {
       var payment = await this.paymentRepository.find();
