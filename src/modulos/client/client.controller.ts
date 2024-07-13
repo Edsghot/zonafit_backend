@@ -20,6 +20,11 @@ export class ClientController {
         return await this.clientService.getAllClients();
     }
 
+    @Get('/getClientDue')
+    async GetClientsDue() {
+        return await this.clientService.GetClientDue();
+    }
+
     @Get('/getById/:id')
     async findOne(@Param('id') id: string) {
         return await this.clientService.getClientById(+id);

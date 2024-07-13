@@ -51,6 +51,15 @@ export class ClientService {
     }
 }
 
+async GetClientDue(){
+    const clients = await this.clientRepository.query("SELECT Client.Code, CONCAT(Client.FirstName, ' ', Client.LastName) AS Apellido, Payment.StartDate, Payment.EndDate, Payment.Due FROM Client INNER JOIN Payment ON Client.IdClient = Payment.clientIdClient WHERE Payment.Due > 0;");
+    if(!clients || clients.length == 0){
+        return {msg:"No se encontraron clientes deudores", success: false}
+    }
+
+    return {msg:"Lista de deudores", success: true, data: clients[0]}
+}
+
 async getClientByCode(code: number){
     const client = await this.clientRepository.findOne({
       where: { Code: code },

@@ -26,4 +26,6 @@ export class VaucherEntity {
 
   @Column()
   IdUser: number;
+
+  
 }
