@@ -14,6 +14,9 @@ export class CartEntity {
   products: ProductEntity[];
 
   @Column()
+  Quantity: number[];
+
+  @Column()
   IdUser: number;
 
   @Column()

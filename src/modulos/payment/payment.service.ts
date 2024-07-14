@@ -254,6 +254,7 @@ export class PaymentService {
 
     const newCart = new CartEntity();
     newCart.price = Price;
+    newCart.Quantity = cartDto.Stocks;
     newCart.products = productEntities;
     newCart.TypePayment = cartDto.TypePayment;
 

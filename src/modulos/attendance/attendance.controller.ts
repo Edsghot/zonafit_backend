@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { AttendanceService } from './attendance.service';
 import { CreateAttendanceDto } from 'src/dto/Attendance/CreateAttendance.dto';
 import { DateRangeDto } from 'src/dto/clientDto/DateRangeDto.dto';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Controller('/api/attendance')
 export class AttendanceController {
@@ -26,6 +27,11 @@ export class AttendanceController {
     @Get('/allByCode/:Code')
     async findAllByCode(@Param('Code') Code:number){
         return await this.serviceAttendance.findAllByCode(Code);
+    }
+    
+    @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+    async handleCron() {
+      await this.serviceAttendance.deductDaysForAbsentees();
     }
 
     @Get('/getById/:id')
@@ -54,3 +60,4 @@ export class AttendanceController {
     }
 
 }
+

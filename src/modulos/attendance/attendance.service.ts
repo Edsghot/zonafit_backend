@@ -5,8 +5,9 @@ import { DateRangeDto } from 'src/dto/clientDto/DateRangeDto.dto';
 import { AttendanceEntity } from 'src/entity/attendance.entity';
 import { ClientEntity } from 'src/entity/client.entity';
 import { UserEntity } from 'src/entity/user.entity';
-import { Repository } from 'typeorm';
+import { Between, MoreThan, Repository } from 'typeorm';
 import * as moment from 'moment-timezone';
+import { PaymentEntity } from 'src/entity/Payment.entity';
 
 @Injectable()
 export class AttendanceService {
@@ -14,6 +15,8 @@ export class AttendanceService {
     private readonly attendanceRepository: Repository<AttendanceEntity>,
     @InjectRepository(ClientEntity)
     private readonly clientRepository:Repository<ClientEntity>,
+    @InjectRepository(PaymentEntity)
+    private readonly paymentRepository:Repository<PaymentEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepository:Repository<UserEntity>) { }
 
@@ -41,6 +44,20 @@ export class AttendanceService {
 
           var attendace = await this.attendanceRepository.findOne({where:{Client: client}});
 
+          var payment = await this.paymentRepository.findOne({where:{Client: client}});
+
+          if(!payment){
+            return {msg:"no se encontro el pago de la membresia, pruebe de nuevo", success:false}
+          }
+
+          if(payment.QuantityDays <= 0){
+            return {msg:"Ya no tiene mas dias, renueve su membresia", success:false}
+          }
+
+          payment.QuantityDays -= 1;
+
+          await this.paymentRepository.save(payment);
+
           const today = moment.tz('America/Lima').toDate();
           
       if (attendace && this.isSameDay(attendace.AttendanceDate, today)) {
@@ -51,6 +68,33 @@ export class AttendanceService {
           return { msg: 'se inserto correctamente', success: true };
         } catch (e) {
           return { msg: 'error al insertar', sucess: false, detailMsg: e.message };
+        }
+      }
+
+      async deductDaysForAbsentees() {
+        const Payments = await this.paymentRepository.find({
+          where: {
+              QuantityDays: MoreThan(0)
+          }
+      });
+    
+        const today = new Date();
+        const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+        const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+    
+        for (const payment of Payments) {
+          var client = await this.clientRepository.findOne({where:{Payment: payment}})
+          const attendance = await this.attendanceRepository.findOne({
+            where: {
+              Client:client,
+              AttendanceDate: Between(startOfDay, endOfDay),
+            },
+          });
+    
+          if (!attendance && payment.QuantityDays > 0) {
+            payment.QuantityDays -= 1;
+            await this.paymentRepository.save(payment);
+          }
         }
       }
 

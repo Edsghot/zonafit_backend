@@ -21,6 +21,10 @@ export class FreezingDayService {
         if (!payment) {
           return { msg: 'No se encontró el pago', success: false };
         }
+
+        if(payment.QuantityDays <= request.NumberOfDay){
+           payment.QuantityDays += request.NumberOfDay -payment.QuantityDays;
+        }
     
         // Crear una nueva instancia de FreezingDayEntity
         const freezingDay = new FreezingDayEntity();
