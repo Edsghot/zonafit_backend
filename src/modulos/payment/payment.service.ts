@@ -36,10 +36,31 @@ export class PaymentService {
     @InjectRepository(VaucherEntity)
     private readonly vaucherRepository: Repository<VaucherEntity>,) { }
 
-    async DetailProduct(){
-      var product = await this.productRepository.query("SELECT User.FirstName AS Responsable,DATE_FORMAT(Cart.CreateAt, '%d/%m/%y') AS 'Fecha de venta',Product.Name AS Producto, CONCAT('s./', COUNT(c.productIdProduct) * Product.Price) AS Precio,Product.Description AS Descripcion,COUNT(c.productIdProduct) AS Cantidad,Cart.TypePayment AS 'Forma de pago' FROM  cart_products_product c INNER JOIN  Cart ON c.cartId = Cart.id INNER JOIN     Product ON Product.IdProduct = c.productIdProduct INNER JOIN User ON User.IdUser = Cart.IdUser GROUP BY Product.Name, DATE_FORMAT(Cart.CreateAt, '%d/%m/%y'), Product.Price, Product.Description, User.FirstName, Cart.TypePayment ORDER BY Cart.CreateAt;")
+    async DetailProduct(request: DateRangeDto){
+      try{
+        const data = await this.paymentRepository.query(
+            `CALL GetDetailPaymentProduct('${request.StartDate}', '${request.EndDate}')`,
+          );
   
-      return {msg: "lista", data: product}
+          if (!data[0] || Object.keys(data[0]).length === 0) {
+            return {
+                msg: 'No se encontró datos',
+                success: false,
+            };
+          }
+          return {
+            msg: 'Lista de ingresos de ventas',
+            data: data[0],
+            success: true,
+          };
+    }catch(error){
+        console.error('Error al recuperar todas las ventas', error);
+        return {
+            msg: 'Error al recuperar todas las ventas del producto',
+            detailMsg: error.message,
+            success: false,
+      };
+  }
   }
   
   async createPayment(request: CreatePaymentDto) {

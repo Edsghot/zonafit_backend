@@ -23,6 +23,30 @@ END//
 
 DELIMITER ;
 
+CREATE PROCEDURE GetDetailPaymentProduct(IN Inicio DATE, IN Fin DATE)
+BEGIN
+    SELECT 
+        User.FirstName AS Responsable,
+        DATE_FORMAT(Cart.CreateAt, '%d/%m/%y') AS 'Fechaventa',
+        Product.Name AS Producto,
+        COUNT(c.productIdProduct) * Product.Price AS Precio,
+        Product.Description AS Descripcion,
+        COUNT(c.productIdProduct) AS Cantidad,
+        Cart.TypePayment AS 'Formapago'
+    FROM 
+        cart_products_product c
+    INNER JOIN 
+        Cart ON c.cartId = Cart.id
+    INNER JOIN 
+        Product ON Product.IdProduct = c.productIdProduct
+    INNER JOIN 
+        User ON User.IdUser = Cart.IdUser
+    WHERE 
+        Cart.CreateAt >= Inicio AND Cart.CreateAt <= Fin
+    GROUP BY 
+        Product.Name, DATE_FORMAT(Cart.CreateAt, '%d/%m/%y'), Product.Price, Product.Description, User.FirstName, Cart.TypePayment;
+END;
+
 DELIMITER //
 CREATE PROCEDURE getPaymentByDateRange(IN Inicio DATE, IN Fin DATE) 
 BEGIN 

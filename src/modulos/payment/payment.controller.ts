@@ -29,8 +29,8 @@ export class PaymentController {
     }
 
     @Post('/paymentProduct')
-    async paymentProduct() {
-      return await this.servicePayment.DetailProduct();
+    async paymentProduct(@Body() request: DateRangeDto) {
+      return await this.servicePayment.DetailProduct(request);
     }
 
     @Get('/GetCount')
