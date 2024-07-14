@@ -53,23 +53,23 @@ export class PaymentController {
       return await this.servicePayment.deletePayment(id);
     }
 
-    @Get("/getPaymentByDateRange")
+    @Post("/getPaymentByDateRange")
     async getPaymentByDateRange(@Body() request: DateRangeDto) {
       return await this.servicePayment.getPaymentByDateRange(request);
     }
 
-    @Get("/getIncomeMembershipByDateRange")
+    @Post("/getIncomeMembershipByDateRange")
     async getIncomeMembershipByDateRange(@Body() request: DateRangeDto) {
       return await this.servicePayment.getIncomeMembershipByDateRange(request);
     }
 
     
-    @Get("/getIncomeProductByDateRange")
+    @Post("/getIncomeProductByDateRange")
     async getIncomeProductByDateRange(@Body() request: DateRangeDto) {
       return await this.servicePayment.getIncomeProductByDateRange(request);
     }
 
-    @Get("/getProductSoldByDateRange")
+    @Post("/getProductSoldByDateRange")
     async getProductSoldByDateRange(@Body() request: DateRangeDto) {
       return await this.servicePayment.getProductSoldByDateRange(request);
     }

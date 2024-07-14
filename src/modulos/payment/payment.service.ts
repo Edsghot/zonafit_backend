@@ -360,6 +360,13 @@ export class PaymentService {
       const data = await this.paymentRepository.query(
           `CALL getIncomeMembershipByDateRange('${request.StartDate}', '${request.EndDate}')`,
         );
+
+        if (!data[0] || Object.keys(data[0]).length === 0) {
+          return {
+              msg: 'No se encontró datos',
+              success: false,
+          };
+        }
         return {
           msg: 'Lista de ingresos de membresia completa',
           data: data[0],
@@ -380,6 +387,12 @@ export class PaymentService {
       const data = await this.productRepository.query(
           `CALL getIncomeProductByDateRange('${request.StartDate}', '${request.EndDate}')`,
         );
+        if (!data[0] || Object.keys(data[0]).length === 0) {
+          return {
+              msg: 'No se encontró datos',
+              success: false,
+          };
+        }
         return {
           msg: 'Lista de ingresos de producto completa',
           data: data[0],
