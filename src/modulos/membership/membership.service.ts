@@ -28,7 +28,7 @@ export class MembershipService {
       membership.Enabled = dto.Enabled;
       await this.membershipRepository.save(membership);
 
-      return { msg: 'se inserto correctamente', success: true };
+      return { msg: 'Se inserto correctamente', success: true };
     } catch (e) {
       return { msg: 'error al insertar', sucess: false, detailMsg: e };
     }

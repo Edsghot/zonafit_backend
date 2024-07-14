@@ -45,7 +45,7 @@ export class ClientService {
         // Guardar la nueva entidad de cliente en la base de datos
         await this.clientRepository.save(newClient);
 
-        return { msg: 'Client inserted successfully', success: true };
+        return { msg: 'Cliente insertado correctamente', success: true };
     } catch (error) {
         console.error('Failed to insert client:', error);
         return { msg: 'Failed to insert client', detailMsg: error, success: false };
@@ -164,7 +164,7 @@ async updateClient(id: number, request: CreateClientDto) {
         await this.clientRepository.save(client);
 
         return {
-            msg: 'Client updated successfully',
+            msg: 'Cliente actualizado correctamente',
             success: true,
             data: client,
         };
