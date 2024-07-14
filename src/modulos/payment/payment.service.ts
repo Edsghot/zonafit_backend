@@ -15,6 +15,7 @@ import { ProductEntity } from 'src/entity/product.entity';
 import { FreezingDayEntity } from 'src/entity/freezingDay.entity';
 import { VaucherEntity } from 'src/entity/voucher.entity';
 import * as moment from 'moment-timezone';
+import { DateRangeDto } from 'src/dto/clientDto/DateRangeDto.dto';
 
 @Injectable()
 export class PaymentService {
@@ -328,5 +329,85 @@ export class PaymentService {
       console.error('Fallo al eliminar el pago:', error);
       return { msg: 'Fallo al eliminar el pago', detailMsg: error, success: false };
     }
+  }
+
+  async getPaymentByDateRange(request: DateRangeDto){
+    try{
+      const data = await this.paymentRepository.query(
+          `CALL getPaymentByDateRange('${request.StartDate}', '${request.EndDate}')`,
+        );
+        return {
+          msg: 'Lista de pagos completa',
+          data: data[0],
+          success: true,
+        };
+  }catch(error){
+      console.error('Error al recuperar todos los pagos:', error);
+      return {
+          msg: 'Error al recuperar todos los pagos',
+          detailMsg: error.message,
+          success: false,
+    };
+  }
+  }
+
+  async getIncomeMembershipByDateRange(request: DateRangeDto){
+    try{
+      const data = await this.paymentRepository.query(
+          `CALL getIncomeMembershipByDateRange('${request.StartDate}', '${request.EndDate}')`,
+        );
+        return {
+          msg: 'Lista de ingresos de membresia completa',
+          data: data[0],
+          success: true,
+        };
+  }catch(error){
+      console.error('Error al recuperar todos los ingresos de membresia:', error);
+      return {
+          msg: 'Error al recuperar todos los ingresos de membresia',
+          detailMsg: error.message,
+          success: false,
+    };
+  }
+  }
+
+  async getIncomeProductByDateRange(request: DateRangeDto){
+    try{
+      const data = await this.productRepository.query(
+          `CALL getIncomeProductByDateRange('${request.StartDate}', '${request.EndDate}')`,
+        );
+        return {
+          msg: 'Lista de ingresos de producto completa',
+          data: data[0],
+          success: true,
+        };
+  }catch(error){
+      console.error('Error al recuperar todos los ingresos de producto:', error);
+      return {
+          msg: 'Error al recuperar todos los ingresos de producto',
+          detailMsg: error.message,
+          success: false,
+    };
+  }
+  }
+
+  async getProductSoldByDateRange(request: DateRangeDto){
+    try{
+      const data = await this.productRepository.query(
+          `CALL getProductSoldByDateRange('${request.StartDate}', '${request.EndDate}')`,
+        );
+        return {
+          msg: 'Lista de venta de productos completa',
+          data: data[0],
+          success: true,
+        };
+  }catch(error){
+      console.error('Error al recuperar todas las ventas de productos:', error);
+      return {
+          msg: 'Error al recuperar todas las ventas de productos',
+          detailMsg: error.message,
+          success: false,
+    };
+  }
   }
 }

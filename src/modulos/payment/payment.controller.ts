@@ -3,6 +3,7 @@ import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from 'src/dto/paymentDto/CreatePayment.dto';
 import { RepairPaymentDto } from 'src/dto/paymentDto/RepairPayment.dto';
 import { CreateCartDto } from 'src/dto/Cart/CreateCart.dto';
+import { DateRangeDto } from 'src/dto/clientDto/DateRangeDto.dto';
 
 @Controller('api/payment')
 export class PaymentController {
@@ -50,5 +51,26 @@ export class PaymentController {
     @Delete('/delete/:id')
     async remove(@Param('id') id: number) {
       return await this.servicePayment.deletePayment(id);
+    }
+
+    @Get("/getPaymentByDateRange")
+    async getPaymentByDateRange(@Body() request: DateRangeDto) {
+      return await this.servicePayment.getPaymentByDateRange(request);
+    }
+
+    @Get("/getIncomeMembershipByDateRange")
+    async getIncomeMembershipByDateRange(@Body() request: DateRangeDto) {
+      return await this.servicePayment.getIncomeMembershipByDateRange(request);
+    }
+
+    
+    @Get("/getIncomeProductByDateRange")
+    async getIncomeProductByDateRange(@Body() request: DateRangeDto) {
+      return await this.servicePayment.getIncomeProductByDateRange(request);
+    }
+
+    @Get("/getProductSoldByDateRange")
+    async getProductSoldByDateRange(@Body() request: DateRangeDto) {
+      return await this.servicePayment.getProductSoldByDateRange(request);
     }
 }
