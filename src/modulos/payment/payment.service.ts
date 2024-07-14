@@ -63,7 +63,8 @@ export class PaymentService {
       payment.PaymentType = request.PaymentType;
       payment.PaymentReceipt = request.PaymentReceipt;
       payment.Observation = request.Observation;
-      payment.DateRegister = moment.tz('America/Lima').toDate();;
+      payment.DateRegister = moment.tz('America/Lima').toDate();
+      
 
       var vaucher = await this.createVoucher(request.idClient,request.Total,"Pago de una membresia",user.IdUser,request.PaymentType);
       

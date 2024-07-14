@@ -36,6 +36,9 @@ export class ProductEntity{
     @Column()
     Stock:number;
 
+    @Column()
+    Deleted:boolean;
+
     @ManyToMany(() => CartEntity, cart => cart.products)
     Carts: CartEntity[];
 }

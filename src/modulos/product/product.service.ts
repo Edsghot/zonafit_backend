@@ -23,6 +23,7 @@ export class ProductService {
             newProduct.PurchasePrice = request.PurchasePrice;
             newProduct.Type = request.Type;
             newProduct.Stock=request.Stock;
+            newProduct.Deleted = false;
 
             await this.productRepository.save(newProduct);
     
@@ -58,10 +59,12 @@ export class ProductService {
 
     async deleteProduct(id: number) {
         try {
-            const result = await this.productRepository.delete(id);
-            if (result.affected === 0) {
-                throw new NotFoundException(`Product con ID ${id} no se encuentra`);
+            var product = await this.productRepository.findOne({where: {IdProduct:id}});
+            if(!product) {
+                return {msg:"Error no se encontro el producto",success: false}
             }
+            product.Deleted = true;
+            await this.productRepository.save(product);
             return { msg: 'Producto eliminado correctamente', success: true };
         } catch (error) {
             console.error('Fallo al eliminar el producto:', error);
