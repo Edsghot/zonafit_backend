@@ -100,11 +100,15 @@ export class PaymentService {
       return {msg: "No tiene deuda", success: false}
     }
 
+    lastPayment[0].Due -= request.Amount;
+    lastPayment[0].Total += request.Amount;
+
    var res = await this.createVoucher(request.IdClient,request.Amount,"pago de una deuda",request.IdUser,request.TypePayment);
 
    if(!res.success){
     return {msg:res.msg,success:false}
    }
+   lastPayment[0].TotalAmount
     await this.paymentRepository.save(lastPayment[0]);
 
     return {msg:'Deuda pagada',success:true};
