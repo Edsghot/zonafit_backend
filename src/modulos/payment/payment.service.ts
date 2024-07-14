@@ -75,9 +75,9 @@ export class PaymentService {
 
 
 
-      return { msg: 'se inserto correctamente', success: true };
+      return { msg: 'Se inserto correctamente', success: true };
     } catch (e) {
-      return { msg: 'error al insertar', sucess: false, detailMsg: e };
+      return { msg: 'Error al insertar', sucess: false, detailMsg: e };
     }
   }
 
@@ -154,7 +154,7 @@ export class PaymentService {
       const clientCount = await this.clientRepository.count();
 
       return {
-        msg: "lista de totales",
+        msg: "Lista de totales",
         success: true,
         data: {
           paymentCount,
@@ -168,10 +168,10 @@ export class PaymentService {
   async findAllPayments() {
     try {
       var payment = await this.paymentRepository.find();
-      return { msg: 'lista de pagos ', success: true, data: payment };
+      return { msg: 'Lista de pagos ', success: true, data: payment };
     } catch (e) {
       return {
-        msg: 'error al listar pagos',
+        msg: 'Error al listar pagos',
         success: false,
         detailMsg: e,
         data: null,

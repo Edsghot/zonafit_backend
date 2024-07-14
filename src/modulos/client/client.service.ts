@@ -45,10 +45,10 @@ export class ClientService {
         // Guardar la nueva entidad de cliente en la base de datos
         await this.clientRepository.save(newClient);
 
-        return { msg: 'Client inserted successfully', success: true };
+        return { msg: 'Cliente insertado correctamente', success: true };
     } catch (error) {
-        console.error('Failed to insert client:', error);
-        return { msg: 'Failed to insert client', detailMsg: error, success: false };
+        console.error('Error al insertar cliente:', error);
+        return { msg: 'Error al insertar cliente', detailMsg: error, success: false };
     }
 }
 
@@ -77,10 +77,10 @@ async getClientByCode(code: number){
 async getAllClients() {
     try {
         const clients = await this.clientRepository.find();
-        return { msg: 'Clients found', success: true, data: clients };
+        return { msg: 'Clientes encontrados', success: true, data: clients };
     } catch (error) {
-        console.error('Failed to get clients:', error);
-        return { msg: 'Failed to get clients', detailMsg: error, success: false };
+        console.error('Error al conseguir clientes:', error);
+        return { msg: 'Error al conseguir clientes', detailMsg: error, success: false };
     }
 }
 
@@ -90,13 +90,13 @@ async getClientCountByMonth() {
         .query("SELECT DATE_FORMAT(Created, '%Y-%m') AS month, COUNT(IdClient) AS count FROM Client GROUP BY DATE_FORMAT(Created, '%Y-%m') ORDER BY month ASC;")
 
       return {
-        msg: "List of client counts by month",
+        msg: "Lista de recuentos de clientes por mes",
         success: true,
         data: clientCounts,
       };
     } catch (error) {
       // Manejo de errores apropiado
-      console.error('Error fetching client counts by month:', error);
+      console.error('Error en el recuento de clientes por mes:', error);
       throw error;
     }
   }
@@ -105,12 +105,12 @@ async getClientById(id: number) {
     try {
         const client = await this.clientRepository.findOne({ where: { IdClient: id } });
         if (!client) {
-            throw new NotFoundException(`Client with ID ${id} not found`);
+            throw new NotFoundException(`Cliente con ID ${id} no encontrado`);
         }
-        return { msg: 'Client found', success: true, data: client };
+        return { msg: 'Cliente encontrado', success: true, data: client };
     } catch (error) {
-        console.error('Failed to get client by ID:', error);
-        return { msg: 'Failed to get client by ID', detailMsg: error, success: false };
+        console.error('Error al obtener el cliente por ID:', error);
+        return { msg: 'Error al obtener el cliente por ID', detailMsg: error, success: false };
     }
 }
 
@@ -118,12 +118,12 @@ async getClientByDni(dni: string) {
     try {
         const client = await this.clientRepository.findOne({ where: { Document: dni } });
         if (!client) {
-            throw new NotFoundException(`Client with DNI ${dni} not found`);
+            throw new NotFoundException(`Cliente con DNI ${dni} no encontrado`);
         }
-        return { msg: 'Client found', success: true, data: client };
+        return { msg: 'Cliente encontrado', success: true, data: client };
     } catch (error) {
-        console.error('Failed to get client by DNI:', error);
-        return { msg: 'Failed to get client by DNI', detailMsg: error, success: false };
+        console.error('Fallo en la obtención de cliente por DNI:', error);
+        return { msg: 'Fallo en la obtención de cliente por DNI', detailMsg: error, success: false };
     }
 }
 
@@ -133,10 +133,10 @@ async deleteClient(id: number) {
         if (result.affected === 0) {
             throw new NotFoundException(`Client with ID ${id} not found`);
         }
-        return { msg: 'Client deleted successfully', success: true };
+        return { msg: 'Cliente eliminado correctamente', success: true };
     } catch (error) {
-        console.error('Failed to delete client:', error);
-        return { msg: 'Failed to delete client', detailMsg: error, success: false };
+        console.error('Error al borrar cliente:', error);
+        return { msg: 'Error al borrar cliente', detailMsg: error, success: false };
     }
 }
 
@@ -144,7 +144,7 @@ async updateClient(id: number, request: CreateClientDto) {
     try {
         const client = await this.clientRepository.findOne({ where: { IdClient: id } });
         if (!client) {
-            return { msg: 'Client not found', success: false };
+            return { msg: 'Cliente no encontrado', success: false };
         }
 
         client.FirstName = request.FirstName;
@@ -164,13 +164,13 @@ async updateClient(id: number, request: CreateClientDto) {
         await this.clientRepository.save(client);
 
         return {
-            msg: 'Client updated successfully',
+            msg: 'Cliente actualizado correctamente',
             success: true,
             data: client,
         };
     } catch (error) {
-        console.error('Failed to update client:', error);
-        return { msg: 'Failed to update client', detailMsg: error, success: false };
+        console.error('Error al actualizar el cliente:', error);
+        return { msg: 'Error al actualizar el cliente', detailMsg: error, success: false };
     }
 }
 
