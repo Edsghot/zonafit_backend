@@ -30,17 +30,17 @@ export class MembershipService {
 
       return { msg: 'Se inserto correctamente', success: true };
     } catch (e) {
-      return { msg: 'error al insertar', sucess: false, detailMsg: e };
+      return { msg: 'Error al insertar', sucess: false, detailMsg: e };
     }
   }
 
   async findAllMemberships() {
     try {
       var membership = await this.membershipRepository.find();
-      return { msg: 'lista de membresias ', success: true, data: membership };
+      return { msg: 'Lista de membresias ', success: true, data: membership };
     } catch (e) {
       return {
-        msg: 'error al listar ',
+        msg: 'Error al listar ',
         success: false,
         detailMsg: e,
         data: null,
@@ -53,10 +53,10 @@ export class MembershipService {
       where: { IdMembership: id },
     });
     if (!membership) {
-      return { msg: 'no se encontro la membresia', success: false, data: null };
+      return { msg: 'No se encontro la membresia', success: false, data: null };
     }
     return {
-      msg: 'no se encontro la membresia',
+      msg: 'No se encontro la membresia',
       success: true,
       data: membership,
     };
@@ -73,16 +73,16 @@ export class MembershipService {
       await this.membershipRepository.save(membership.data);
 
       await this.membershipRepository.save(membership.data);
-      return { msg: 'se actualizo correctamente', success: true };
+      return { msg: 'Se actualizo correctamente', success: true };
     } catch (e) {
-      return { msg: 'error al actualizar', success: false, detailMsg: e };
+      return { msg: 'Error al actualizar', success: false, detailMsg: e };
     }
   }
 
   async deleteMembership(id: number) {
     const result = await this.membershipRepository.delete(id);
     if (result.affected === 0) {
-      return { msg: 'error al eliminar ', success: false };
+      return { msg: 'Error al eliminar ', success: false };
     }
 
     return { msg: 'Se elimino correctamente', success: true };

@@ -47,10 +47,10 @@ export class FreezingDayService {
       async findAllFreezingDay() {
         try {
           var freezingDay = await this.freezingDayRepository.find();
-          return { msg: 'lista de congelados ', success: true, data: freezingDay };
+          return { msg: 'Lista de congelados ', success: true, data: freezingDay };
         } catch (e) {
           return {
-            msg: 'error al listar congelados',
+            msg: 'Error al listar congelados',
             success: false,
             detailMsg: e,
             data: null,

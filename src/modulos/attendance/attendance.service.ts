@@ -61,13 +61,13 @@ export class AttendanceService {
           const today = moment.tz('America/Lima').toDate();
           
       if (attendace && this.isSameDay(attendace.AttendanceDate, today)) {
-      return { msg: 'ya se registro la asistencia el dia de hoy', success: false };
+      return { msg: 'Ya se registro la asistencia el dia de hoy', success: false };
     }
 
           await this.attendanceRepository.save(attendance);
-          return { msg: 'se inserto correctamente', success: true };
+          return { msg: 'Se inserto correctamente', success: true };
         } catch (e) {
-          return { msg: 'error al insertar', sucess: false, detailMsg: e.message };
+          return { msg: 'Error al insertar', sucess: false, detailMsg: e.message };
         }
       }
 
@@ -101,10 +101,10 @@ export class AttendanceService {
       async findAllAttendance() {
         try {
           var attendance = await this.attendanceRepository.find();
-          return { msg: 'lista de asistencia ', success: true, data: attendance };
+          return { msg: 'Lista de asistencia ', success: true, data: attendance };
         } catch (e) {
           return {
-            msg: 'error al listar asistencia',
+            msg: 'Error al listar asistencia',
             success: false,
             detailMsg: e.message,
             data: null,
