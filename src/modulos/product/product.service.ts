@@ -14,6 +14,13 @@ export class ProductService {
 
       async insertProduct(request: CreateProductDto) {
         try {
+
+            var product = await this.productRepository.findOne({where:{Name: request.Name,Deleted: false}});
+
+            if(product) {
+                return {msg:"Ya existe un producto con ese nombre, solo aumente el stock", success: false};
+            }
+
             const newProduct = new ProductEntity();
 
             newProduct.Name = request.Name;
@@ -36,7 +43,7 @@ export class ProductService {
 
     async getAllProducts() {
         try {
-            const products = await this.productRepository.find();
+            const products = await this.productRepository.find({where: {Deleted: false}});
             return { msg: 'Productos encontrados', success: true, data: products };
         } catch (error) {
             console.error('Fallo al obtener los productos:', error);
@@ -46,7 +53,7 @@ export class ProductService {
     
     async getProductById(id: number) {
         try {
-            const product = await this.productRepository.findOne({ where: { IdProduct: id } });
+            const product = await this.productRepository.findOne({ where: { IdProduct: id,Deleted: false } });
             if (!product) {
                 throw new NotFoundException(`Producto con el ID ${id} no encontrado`);
             }
@@ -74,7 +81,7 @@ export class ProductService {
 
     async updateProduct(id: number, request: CreateProductDto) {
         try {
-            const product = await this.productRepository.findOne({ where: { IdProduct: id } });
+            const product = await this.productRepository.findOne({ where: { IdProduct: id ,Deleted: false} });
             if (!product) {
                 return { msg: 'Producto no se encuentra', success: false };
             }
