@@ -79,6 +79,8 @@ export class ProductService {
         }
     }
 
+  
+
     async updateProduct(id: number, request: CreateProductDto) {
         try {
             const product = await this.productRepository.findOne({ where: { IdProduct: id ,Deleted: false} });

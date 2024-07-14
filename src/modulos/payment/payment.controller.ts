@@ -28,6 +28,11 @@ export class PaymentController {
       return await this.servicePayment.findAllPayments();
     }
 
+    @Post('/paymentProduct')
+    async paymentProduct() {
+      return await this.servicePayment.DetailProduct();
+    }
+
     @Get('/GetCount')
     async GetCount(){
       return await this.servicePayment.GetCount();
