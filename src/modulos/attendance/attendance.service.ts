@@ -44,10 +44,10 @@ export class AttendanceService {
 
           var attendace = await this.attendanceRepository.findOne({where:{Client: client}});
 
-          var payment = await this.paymentRepository.findOne({where:{Client: client}});
+          const payment = await this.paymentRepository.query("SELECT * FROM Payment where clientIdClient = "+client.IdClient)
 
-          if(!payment){
-            return {msg:"no se encontro el pago de la membresia, pruebe de nuevo", success:false}
+          if (!payment) {
+            return { msg: "No se encontró el pago de la membresía, por favor intente de nuevo.", success: false };
           }
 
           if(payment.QuantityDays <= 0){

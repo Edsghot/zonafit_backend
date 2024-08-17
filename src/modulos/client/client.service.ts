@@ -22,6 +22,15 @@ export class ClientService {
   }
   async insertClient(request: CreateClientDto) {
     try {
+
+         var Client = await this.clientRepository.findOne({where: {PhoneNumber: request.PhoneNumber}});
+
+         if(Client){
+            return {
+                msg: "Con este telefono ya esta registrado el cliente " + Client.FirstName,
+                success: false
+            }
+         }
         // Crear una nueva entidad de cliente utilizando los datos del DTO
         const newClient = new ClientEntity();
 

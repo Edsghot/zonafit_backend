@@ -21,6 +21,16 @@ export class UserService {
 
     async insertUser(request: CreateUserDto) {
       try {
+
+        var user = await this.userRepository.findOne({where: {PhoneNumber: request.PhoneNumber}});
+
+         if(user){
+            return {
+                msg: "Con este telefono ya esta registrado el cliente " + user.FirstName,
+                success: false
+            }
+         }
+
         const maxCode = await this.getMaxClientCode();
           // Crear una nueva entidad de usuario utilizando los datos del DTO
           const newUser = this.userRepository.create({
@@ -41,7 +51,7 @@ export class UserService {
           // Guardar la nueva entidad de usuario en la base de datos
           await this.userRepository.save(newUser);
   
-          return { msg: 'User inserted successfully', success: true };
+          return { msg: 'Usuario creado correctamente', success: true };
       } catch (error) {
           console.error('Failed to insert user:', error);
           return { msg: 'Failed to insert user', detailMsg: error, success: false };

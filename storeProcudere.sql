@@ -23,13 +23,15 @@ END//
 
 DELIMITER ;
 
+DELIMITER //
+
 CREATE PROCEDURE GetDetailPaymentProduct(IN Inicio DATE, IN Fin DATE)
 BEGIN
     SELECT 
-        User.FirstName AS Responsable,
+        User.UserName AS Responsable,
         DATE_FORMAT(Cart.CreateAt, '%d/%m/%y') AS 'Fechaventa',
         Product.Name AS Producto,
-        COUNT(c.productIdProduct) * Product.Price AS Precio,
+        SUM(Product.Price) AS Precio,
         Product.Description AS Descripcion,
         COUNT(c.productIdProduct) AS Cantidad,
         Cart.TypePayment AS 'Formapago'
@@ -42,15 +44,17 @@ BEGIN
     INNER JOIN 
         User ON User.IdUser = Cart.IdUser
     WHERE 
-        Cart.CreateAt >= Inicio AND Cart.CreateAt <= Fin
+        Cart.CreateAt BETWEEN Inicio AND Fin
     GROUP BY 
-        Product.Name, DATE_FORMAT(Cart.CreateAt, '%d/%m/%y'), Product.Price, Product.Description, User.FirstName, Cart.TypePayment;
-END;
+        User.FirstName, DATE_FORMAT(Cart.CreateAt, '%d/%m/%y'), Product.Name, Product.Price, Product.Description, Cart.TypePayment;
+END //
+
+DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE getPaymentByDateRange(IN Inicio DATE, IN Fin DATE) 
 BEGIN 
-	SELECT u.UserName,CONCAT(c.FirstName,' ',c.LastName) as Name, c.Code, p.Total, p.Due,p.StartDate,p.EndDate,p.PaymentType 
+	SELECT u.UserName,CONCAT(c.FirstName,' ',c.LastName) as Name, c.Code, p.Total, p.Due,p.StartDate,p.EndDate,p.PaymentType,m.Name as Plan
 	FROM Payment p 
 	INNER JOIN User u on p.userIdUser=u.IdUser 
 	INNER JOIN Client c on p.clientIdClient=c.IdClient 
@@ -62,21 +66,21 @@ DELIMITER ;
 CALL getPaymentByDateRange('2024-07-01', '2024-07-30');
 
 
-DELIMITER //
-CREATE PROCEDURE getIncomeMembershipByDateRange(IN Inicio DATE, IN Fin DATE) 
-BEGIN 
-	SELECT 
-    SUM(Due) AS 'Total deudas',
-    SUM(CASE WHEN PaymentType = 'Efectivo' THEN PrePaid ELSE 0 END) AS Efectivo,
-    SUM(CASE WHEN PaymentType = 'Tarjeta de crédito' THEN PrePaid ELSE 0 END) AS 'Tarjeta de Credito',
-    SUM(CASE WHEN PaymentType = 'Yape' THEN PrePaid ELSE 0 END) AS Yape,
-    (SUM(CASE WHEN PaymentType = 'Efectivo' THEN PrePaid ELSE 0 END) +
-     SUM(CASE WHEN PaymentType = 'Tarjeta de crédito' THEN PrePaid ELSE 0 END) +
-     SUM(CASE WHEN PaymentType = 'Yape' THEN PrePaid ELSE 0 END)) AS 'Ingreso Total'
-    FROM Payment
-    WHERE DatePayment >= Inicio AND DatePayment <= Fin; 
-END//
-DELIMITER ;
+    DELIMITER //
+    CREATE PROCEDURE getIncomeMembershipByDateRange(IN Inicio DATE, IN Fin DATE) 
+    BEGIN 
+        SELECT 
+        SUM(Due) AS 'Total deudas',
+        SUM(CASE WHEN PaymentType = 'Efectivo' THEN Total ELSE 0 END) AS Efectivo,
+        SUM(CASE WHEN PaymentType = 'Tarjeta de crédito' THEN Prepaid ELSE 0 END) AS 'Tarjeta de Credito',
+        SUM(CASE WHEN PaymentType = 'Yape' THEN Total ELSE 0 END) AS Yape,
+        (SUM(CASE WHEN PaymentType = 'Efectivo' THEN Total ELSE 0 END) +
+        SUM(CASE WHEN PaymentType = 'Tarjeta de crédito' THEN Total ELSE 0 END) +
+        SUM(CASE WHEN PaymentType = 'Yape' THEN Total ELSE 0 END)) AS 'Ingreso Total'
+        FROM Payment
+        WHERE DatePayment >= Inicio AND DatePayment <= Fin; 
+    END//
+    DELIMITER ;
 
 CALL getIncomeMembershipByDateRange('2024-07-01', '2024-07-30');
 
