@@ -15,11 +15,11 @@ import { VaucherModule } from './modulos/vaucher/vaucher.module';
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),TypeOrmModule.forRoot({
     type: 'mysql',
-    host: 'ccontrolz.com',
+    host: 'jhedgost.com',
     port: 3306,
-    username: 'nibcqvah_edsghot',
-    password: 'Repro123.',
-    database: 'nibcqvah_zonaFit',
+    username: 'dbjhfjuv_edsghot',
+    password: 'Repro321.',
+    database: 'dbjhfjuv_zonafit',
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
     synchronize: true
 }), UserModule, ClientModule, MembershipModule, PaymentModule, ProductModule, FreezingDayModule, AttendanceModule,CloudinaryModule,VaucherModule ],
