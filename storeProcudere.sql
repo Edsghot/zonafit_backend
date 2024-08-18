@@ -27,6 +27,7 @@ DELIMITER //
 
 CREATE PROCEDURE GetDetailPaymentProduct(IN Inicio DATE, IN Fin DATE)
 BEGIN
+
     SELECT 
         User.UserName AS Responsable,
         DATE_FORMAT(Cart.CreateAt, '%d/%m/%y') AS 'Fechaventa',

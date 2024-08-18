@@ -42,7 +42,25 @@ export class AttendanceService {
           
           attendance.AttendanceDate= moment.tz('America/Lima').toDate();
 
-          var attendace = await this.attendanceRepository.findOne({where:{Client: client}});
+          const todaya = moment.tz('America/Lima').toDate();
+
+          // Formatear la fecha manualmente en formato 'YYYY-MM-DD'
+          const year = todaya.getFullYear();
+          const month = String(todaya.getMonth() + 1).padStart(2, '0'); // Los meses son 0 indexados, por lo que se añade +1
+          const day = String(todaya.getDate()).padStart(2, '0');
+
+          const today = `${year}-${month}-${day}`; // Obtener la fecha de hoy en formato 'YYYY-MM-DD'
+
+          // Ajuste en la consulta SQL
+          var attendace = await this.attendanceRepository.query(`
+              SELECT * FROM Attendance 
+              WHERE IdClient = ${client.IdClient}
+              AND DATE(AttendanceDate) = '${today}';
+          `);
+        
+          if (attendace.length > 0) {
+            return { msg: 'El dia de hoy ya se registro', success: false};
+        }
 
           const payment = await this.paymentRepository.query("SELECT * FROM Payment where clientIdClient = "+client.IdClient)
 
@@ -58,16 +76,11 @@ export class AttendanceService {
 
           await this.paymentRepository.save(payment);
 
-          const today = moment.tz('America/Lima').toDate();
-          
-      if (attendace && this.isSameDay(attendace.AttendanceDate, today)) {
-      return { msg: 'Ya se registro la asistencia el dia de hoy', success: false };
-    }
 
           await this.attendanceRepository.save(attendance);
           return { msg: 'Se inserto correctamente', success: true };
         } catch (e) {
-          return { msg: 'Error al insertar', sucess: false, detailMsg: e.message };
+          return { msg: 'Error al insertar', success: false, detailMsg: e.message };
         }
       }
 
