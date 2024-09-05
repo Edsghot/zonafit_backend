@@ -355,13 +355,8 @@ export class PaymentService {
       payment.PaymentReceipt = request.PaymentReceipt;
       payment.Observation = request.Observation;
 
-      var vaucher = await this.updateVoucher(request.idVoucher,request.Total,request.PaymentType);
-
-      if(!vaucher.success) {
-        return {msg:vaucher.msg,success:vaucher.success}
-      }
+   
       await this.paymentRepository.save(payment);
-
 
 
       return {
