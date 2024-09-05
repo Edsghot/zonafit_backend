@@ -16,6 +16,7 @@ import { FreezingDayEntity } from 'src/entity/freezingDay.entity';
 import { VaucherEntity } from 'src/entity/voucher.entity';
 import * as moment from 'moment-timezone';
 import { DateRangeDto } from 'src/dto/clientDto/DateRangeDto.dto';
+import { UpdatePaymentDto } from 'src/dto/paymentDto/UpdatePayment.dto';
 
 @Injectable()
 export class PaymentService {
@@ -176,6 +177,23 @@ export class PaymentService {
   return { msg: "ok", success: true };
   }
 
+  async updateVoucher(idVoucher: number,Amount: number,typePayment:string){
+      
+    var voucher = await this.vaucherRepository.findOne({where: {VoucherId: idVoucher}});
+
+    if(!voucher){
+      return {msg:"No se encontro el voucher", success: false}
+    }
+
+    voucher.Amount = Amount;
+    voucher.TypePayment = typePayment;
+
+
+    await this.vaucherRepository.save(voucher);
+
+  return { msg: "ok", success: true };
+  }
+
   async GetCount(){
     const paymentCount = await this.paymentRepository.count();
       const totalRevenue = await this.paymentRepository
@@ -303,9 +321,9 @@ export class PaymentService {
     
   }
 
-  async updatePayment(id: number, request: CreatePaymentDto) {
+  async updatePayment(request: UpdatePaymentDto) {
     try {
-      const payment = await this.paymentRepository.findOne({ where: { PaymentId: id } });
+      const payment = await this.paymentRepository.findOne({ where: { PaymentId: request.idPayment } });
       if (!payment) {
         return { msg: 'No se encontro el pago', success: false };
       }
@@ -336,7 +354,15 @@ export class PaymentService {
       payment.PaymentType = request.PaymentType;
       payment.PaymentReceipt = request.PaymentReceipt;
       payment.Observation = request.Observation;
+
+      var vaucher = await this.updateVoucher(request.idVoucher,request.Total,request.PaymentType);
+
+      if(!vaucher.success) {
+        return {msg:vaucher.msg,success:vaucher.success}
+      }
       await this.paymentRepository.save(payment);
+
+
 
       return {
         msg: 'Pago actualizado correctamente',

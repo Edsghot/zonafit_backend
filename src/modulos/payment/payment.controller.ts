@@ -4,6 +4,7 @@ import { CreatePaymentDto } from 'src/dto/paymentDto/CreatePayment.dto';
 import { RepairPaymentDto } from 'src/dto/paymentDto/RepairPayment.dto';
 import { CreateCartDto } from 'src/dto/Cart/CreateCart.dto';
 import { DateRangeDto } from 'src/dto/clientDto/DateRangeDto.dto';
+import { UpdatePaymentDto } from 'src/dto/paymentDto/UpdatePayment.dto';
 
 @Controller('api/payment')
 export class PaymentController {
@@ -48,9 +49,9 @@ export class PaymentController {
       return this.servicePayment.findAllByUserCode(search);
     }
 
-    @Put('/update/:id')
-    async update(@Param('id') id: number, @Body() updatePaymentDto: CreatePaymentDto) {
-        return await this.servicePayment.updatePayment(id, updatePaymentDto);
+    @Put('/update')
+    async update( @Body() updatePaymentDto: UpdatePaymentDto) {
+        return await this.servicePayment.updatePayment(updatePaymentDto);
     }
 
     @Delete('/delete/:id')
