@@ -17,6 +17,7 @@ import { VaucherEntity } from 'src/entity/voucher.entity';
 import * as moment from 'moment-timezone';
 import { DateRangeDto } from 'src/dto/clientDto/DateRangeDto.dto';
 import { UpdatePaymentDto } from 'src/dto/paymentDto/UpdatePayment.dto';
+import { CreateClasesDto } from 'src/dto/paymentDto/createClases.dto';
 
 @Injectable()
 export class PaymentService {
@@ -63,6 +64,54 @@ export class PaymentService {
       };
   }
   }
+
+
+  async createClases(request: CreateClasesDto) {
+    try {
+      let payment = new PaymentEntity();
+      var res = await this.clientRepository.findOne({ where: { Code: 1000 } })
+      if (!res) {
+        return { msg: 'FALTA CREAR UN USUARIO, COMUNICATE CON EL ADMINISTRADOR DEL SISTEMA', success: false };
+      }
+      payment.Client = res;
+      var membership = await this.membershipRepository.findOne({ where: { IdMembership: 100 } })
+      if (!membership) {
+        return { msg: 'FALTA CREAR UNA MEMBRESIA, COMUNICATE CON EL ADMINISTRADOR DEL SISTEMA', success: false };
+      }
+      payment.Membership = membership;
+
+      
+      var user = await this.userRepository.findOne({ where: { IdUser: request.IdUser } })
+      payment.User = user;
+      payment.StartDate = moment.tz('America/Lima').toDate();
+      payment.EndDate = moment.tz('America/Lima').toDate();
+      payment.Total = request.Total;
+      payment.Discount = 0;
+      payment.PriceDiscount = 0;
+      payment.QuantityDays = 1;
+      payment.DatePayment = moment.tz('America/Lima').toDate();
+      payment.Due = 0;
+      payment.PrePaid = request.Total;
+      payment.PaymentType = request.PaymentType;
+      payment.PaymentReceipt = request.PaymentReceipt;
+      payment.Observation = request.Observation;
+      payment.DateRegister = moment.tz('America/Lima').toDate();
+      
+
+      var vaucher = await this.createVoucher(res.IdClient,request.Total,"Pago de una clase",user.IdUser,request.PaymentType);
+      
+      if(!vaucher.success){
+        return {msg: vaucher.msg,success:false}
+      }
+     
+      await this.paymentRepository.save(payment);
+
+      return { msg: 'Se registro correctamente la clase', success: true };
+    } catch (e) {
+      return { msg: 'Error al insertar', sucess: false, detailMsg: e };
+    }
+  }
+
   
   async createPayment(request: CreatePaymentDto) {
     try {
