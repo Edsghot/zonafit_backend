@@ -385,10 +385,7 @@ export class PaymentService {
       payment.StartDate = request.StartDate;
       payment.EndDate = request.EndDate;
 
-   
       await this.paymentRepository.save(payment);
-
-
       return {
         msg: 'Pago actualizado correctamente',
         success: true,
