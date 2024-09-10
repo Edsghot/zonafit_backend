@@ -372,20 +372,11 @@ export class PaymentService {
 
   async updatePayment(request: UpdatePaymentDto) {
     try {
-      const payment = await this.paymentRepository.findOne({ where: { PaymentId: request.idPayment } });
+      const payment = await this.paymentRepository.findOne({ where: { PaymentId: request.IdPayment } });
       if (!payment) {
         return { msg: 'No se encontro el pago', success: false };
       }
-      var res = await this.clientRepository.findOne({ where: { IdClient: request.idClient } })
-      if (!res) {
-        return { msg: 'No se encontro el cliente', success: false };
-      }
-      payment.Client = res;
-      var membership = await this.membershipRepository.findOne({ where: { IdMembership: request.idMembership } })
-      if (!membership) {
-        return { msg: 'No se encontro el membership', success: false };
-      }
-      payment.Membership=membership;
+ 
       var user = await this.userRepository.findOne({ where: { IdUser: request.IdUser } })
       if(!user){
         return{msg:"No se encontro el usuario", success:false};
@@ -393,16 +384,6 @@ export class PaymentService {
       payment.User = user;
       payment.StartDate = request.StartDate;
       payment.EndDate = request.EndDate;
-      payment.Total = request.Total;
-      payment.Discount = request.Discount;
-      payment.PriceDiscount = request.PriceDiscount;
-      payment.QuantityDays = request.QuantityDays;
-      payment.DatePayment = request.DatePayment;
-      payment.Due = request.Due;
-      payment.PrePaid = request.PrePaid;
-      payment.PaymentType = request.PaymentType;
-      payment.PaymentReceipt = request.PaymentReceipt;
-      payment.Observation = request.Observation;
 
    
       await this.paymentRepository.save(payment);
